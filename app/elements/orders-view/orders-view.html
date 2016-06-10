@@ -1,0 +1,154 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/firebase-element/firebase-collection.html">
+<link rel="import" href="../orders-name/orders-name.html">
+<link rel="import" href="../orders-menu/orders-menu.html">
+<link rel="import" href="../orders-current/orders-current.html">
+<link rel="import" href="../orders-confirm/orders-confirm.html">
+<link rel="import" href="../orders-list/orders-list.html">
+
+
+
+
+
+<dom-module id="orders-view">
+    <template>
+
+
+        <paper-material>
+            <!-- 'fire()' method attached created the event 'add-name'. 'add-to-name' listens to it and fires addName -->
+            <orders-name on-add-name="addName"></orders-name>
+
+            <firebase-collection id='polypol' data="{{orders}}" location="https://polypol.firebaseio.com/" query="key"></firebase-collection>
+        </paper-material>
+
+        <paper-material>
+            <orders-menu></orders-menu>
+        </paper-material>
+        <paper-material>
+            <orders-current></orders-current>
+        </paper-material>
+
+        <paper-material>
+            <orders-confirm></orders-confirm>
+        </paper-material>
+
+        <paper-material>
+            <orders-list></orders-list>
+        </paper-material>
+
+    </template>
+
+    <script>
+
+        (function() {
+            Polymer({
+                is: 'orders-view',
+
+                properties: {
+                    orders: Array
+                },
+
+                addName: function(e) {
+
+                    //Get the database from the ID of the element
+                    //database = this.$.polypol;
+
+                    //Call the method and return the details
+
+                    // var orderID = database.add({
+                    //     name: e.detail.value
+                    // });
+
+                    //Get the key of the Order
+
+                    // var orderKey = orderID.key();
+                    // console.log(orderKey);
+
+                    //votes = database.child("votes");
+
+                    //var section = 'sec__01';
+
+                    database = new Firebase('https://polypol.firebaseio.com/');
+                    dbString = 'https://polypol.firebaseio.com/';
+
+
+
+                    /**
+                     * Creates the childs in the database
+                     * Use in a loop!!
+                     * @param {Number} i
+                     */
+                    var makeData = function(i){
+                        var section = 'sec'; //if it doesn't work, put outside function
+                        database.child(section + '_' + i).set({
+                            villano: 0,
+                            decri: 0,
+                            total: 0
+                        })
+                    }
+
+                    //for(l=1; l < 6; l++){ makeData(l); }
+
+                    /**
+                     * Gets the data from the database and outputs the number
+                     * the votes of a specific candidate
+                     * @param {String} section
+                     * @param {String} candidate
+                     * @return {Number}
+                     */
+                    var getData = function(section, candidate) {
+                        var dbTarget = new Firebase('https://polypol.firebaseio.com/' + section);
+                        //console.log(dbTarget);
+
+                        dbTarget.once("value", function(snapshot) {
+                            var data = snapshot.val();
+                            var total = data.total;
+                            var candidateVotes = data[candidate];
+
+                            var percentage = Number((((candidateVotes / total) * 100).toFixed(2)));
+                            console.log(typeof percentage);
+
+                            console.log( candidate + " has " + percentage + "% of the votes" );
+                        });
+                    }
+
+                    //getData('sec_1', 'decri');
+
+                    var updateData = function(section, candidate) {
+                        var dbTarget = new Firebase('https://polypol.firebaseio.com/' + section + '/' + candidate);
+
+                        dbTarget.transaction(function(currentCandidate) {
+                            //console.log(currentCandidate);
+                            return currentCandidate + 1;
+                        });
+                    }
+
+                    var updateSectionTotal = function (section) {
+                        var dbTarget = new Firebase('https://polypol.firebaseio.com/' + section + '/total');
+
+                        dbTarget.transaction(function(currentTotal) {
+                            //console.log(currentCandidate);
+                            return currentTotal + 1;
+                        });
+                    }
+
+                    //updateData('sec_1', 'villano');
+                    //updateSectionTotal('sec_1');
+                    getData('sec_1', 'villano');
+                }
+
+            });
+        })();
+    </script>
+
+</dom-module>

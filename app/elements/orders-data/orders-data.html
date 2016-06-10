@@ -8,21 +8,27 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 
-<script src="../../bower_components/page/page.js"></script>
+<link rel="import" href="../../bower_components/firebase-element/firebase-collection.html">
+
+<dom-module id="orders-data">
+
+<template>
+    <firebase-collection data="{{orders}}" location="{{location}}" on-firebase-value="funk"></firebase-collection>
+</template>
+
 <script>
-  window.addEventListener('WebComponentsReady', function() {
-
-    // We use Page.js for routing. This is a Micro
-    // client-side router inspired by the Express router
-    // More info: https://visionmedia.github.io/page.js/
-    page('/', function () {
-      app.route = 'home';
-    });
-
-    // add #! before urls
-    page({
-      hashbang: true
-    });
-
-  });
+    
+    (function() {
+        Polymer({
+            is: 'orders-data',
+            
+            properties: {
+                
+                orders: {
+                    notify: true
+                }
+            }
+        });
+    })();
 </script>
+</dom-module>
