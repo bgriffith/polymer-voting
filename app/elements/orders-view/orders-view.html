@@ -97,6 +97,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         })
                     }
 
+                    var makeTotal = function(i){
+                        //var section = 'sec'; //if it doesn't work, put outside function
+                        database.child(section + '_' + i).set({
+                            villano: 0,
+                            decri: 0,
+                            total: 0
+                        })
+                    }
+
                     //for(l=1; l < 6; l++){ makeData(l); }
 
                     /**
@@ -122,29 +131,60 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         });
                     }
 
-                    //getData('sec_1', 'decri');
-
-                    var updateData = function(section, candidate) {
-                        var dbTarget = new Firebase('https://polypol.firebaseio.com/' + section + '/' + candidate);
-
-                        dbTarget.transaction(function(currentCandidate) {
-                            //console.log(currentCandidate);
-                            return currentCandidate + 1;
-                        });
-                    }
-
-                    var updateSectionTotal = function (section) {
+                    var updateSectionTotal = function (section, action) {
                         var dbTarget = new Firebase('https://polypol.firebaseio.com/' + section + '/total');
 
                         dbTarget.transaction(function(currentTotal) {
-                            //console.log(currentCandidate);
-                            return currentTotal + 1;
+                            if (action == 'add') {
+                                return currentTotal + 1;
+                            }else if (action == 'remove') {
+                                return currentTotal - 1;
+                            }
                         });
                     }
 
-                    //updateData('sec_1', 'villano');
-                    //updateSectionTotal('sec_1');
-                    getData('sec_1', 'villano');
+                    var updateMainTotal = function (action) {
+                        var dbTarget = new Firebase('https://polypol.firebaseio.com/maintotal');
+
+                        dbTarget.transaction(function(currentMaintotal) {
+                            if (action == 'add') {
+                                return currentMaintotal + 1;
+                            }else if (action == 'remove') {
+                                return currentMaintotal - 1;
+                            }
+                        });
+                    }
+
+                    var updateCandidateMainTotal = function (action, candidate) {
+                        var dbTarget = new Firebase('https://polypol.firebaseio.com/' + candidate + 'total');
+                        var valueTarget = 'current' + candidate.charAt(0).toUpperCase() + candidate.slice(1) + 'total';
+
+                        dbTarget.transaction(function(valueTarget) {
+                            if (action == 'add') {
+                                return valueTarget + 1;
+                            }else if (action == 'remove') {
+                                return valueTarget - 1;
+                            }
+                        });
+                    }
+
+                    var updateData = function(section, candidate, action) {
+                        var dbTarget = new Firebase('https://polypol.firebaseio.com/' + section + '/' + candidate);
+
+                        dbTarget.transaction(function(currentCandidate) {
+                            if (action == 'add') {
+                                return currentCandidate + 1;
+                            }else if (action == 'remove') {
+                                return currentCandidate - 1;
+                            }
+                        });
+
+                        updateSectionTotal(section, action);
+                        updateMainTotal(action, 'tot');
+                        updateCandidateMainTotal(action, candidate);
+                    }
+
+                    updateData('sec_2', 'villano', 'add');
                 }
 
             });
