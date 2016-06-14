@@ -8,32 +8,27 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 
-<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/firebase-element/firebase-collection.html">
 
-<dom-module id="orders-menu-item">
-  <template>
-    <style>
-      :host {
-        display: block;
-      }
-    </style>
-    <div>Hello from <span>{{foo}}</span></div>
-  </template>
-  <script>
-  (function() {
-    'use strict';
+<dom-module id="orders-data">
 
-    Polymer({
-      is: 'orders-menu-item',
+<template>
+    <firebase-collection id='polypol' data="{{votes}}" location="{{location}}"></firebase-collection>
+</template>
 
-      properties: {
-        foo: {
-          type: String,
-          value: 'orders-menu-item',
-          notify: true
-        }
-      }
-    });
-  })();
-  </script>
+<script>
+
+    (function() {
+        Polymer({
+            is: 'orders-data',
+
+            properties: {
+
+                orders: {
+                    notify: true
+                }
+            }
+        });
+    })();
+</script>
 </dom-module>

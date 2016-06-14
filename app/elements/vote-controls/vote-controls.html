@@ -12,14 +12,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
 
 
-<dom-module id="orders-name">
+<dom-module id="vote-controls">
   <template>
     <style>
       :host {
         display: block;
       }
     </style>
-    
+
     <paper-input id="userName" on-keydown="setName"></paper-input> <!-- on-blur="_hideInput"-->
     <div>Hello from <span>{{chosenName}}</span></div>
   </template>
@@ -28,40 +28,40 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     'use strict';
 
     Polymer({
-        is: 'orders-name',
+        is: 'vote-controls',
 
         properties: {
-            
+
             chosenName: {
               type: String,
               value: '',
               notify: true
             },
-            
+
             blurred: {
               type: Boolean,
               value: false,
               notify: true
             }
         },
-        
+
         focus: function(){
-            this.$.input.focus();  
+            this.$.input.focus();
         },
-      
+
         setName: function(e) {
             if (e.keyCode === 13 || e.keyCode === 9) {
-                
+
                 this.chosenName = this.$.userName.value;
                 console.log(this.chosenName); //get the value of the name
-                
-                
+
+
                 //Fires the 'add-name' event; It will be listened as 'on-add-name'
                 this.fire('add-name', {value: this.$.userName.value});
                 this.$.userName.value = null;
             }
-        } 
-        
+        }
+
         /*
         _hideInput: function(e) {
             //if(this.$.userName.value){
@@ -70,7 +70,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 this.fire('add-name', {value: this.$.userName.value});
                 this.$.userName.value = null;
             //}
-        }   
+        }
         */
     });
   })();
