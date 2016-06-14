@@ -10,7 +10,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
-
+<link rel="import" href="../../bower_components/polymerfire/firebase-query.html">
 
 <dom-module id="vote-controls">
   <template>
@@ -21,11 +21,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </style>
 
     <paper-input section="sec_02" candidate="villano" action="add" id="voteValue" on-keydown="voteInput"></paper-input> <!-- on-blur="_hideInput"-->
-
-    <template is="dom-repeat" items="{{votes}}" as="vote">
-      <h4>[[vote]]</h4>
-      Height: <span>[[dinosaur.height]]</span>m
+    <template is="dom-repeat" items="{{votes}}">
+        <template is="dom-if" if="{{isSection(item.__firebaseKey__)}}">
+            <p>{{item.__firebaseKey__}}</p>
+            <paper-input section$="section{{index}}" candidate="villano" action="add" id="voteValue" on-keydown="voteInput"></paper-input>
+        </template>
     </template>
+
   </template>
   <script>
   (function() {
@@ -33,6 +35,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     Polymer({
         is: 'vote-controls',
+
+        filtz: function(item){
+            //item = 'caaaazz';
+            console.log(item)
+            return item;
+        },
+
+        isSection: function(element){
+            var sectionPrefix = 'sec_';
+            var elementPrefix = element.substring(0,4);
+
+            if (elementPrefix === sectionPrefix) {
+                return true;
+            }
+
+            return false;
+        },
 
         properties: {
 

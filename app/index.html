@@ -123,8 +123,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <section data-route="home" tabindex="-1">
 
               <paper-material elevation="1">
-                  <vote-data votes="{{votes}}" location="https://polypol.firebaseio.com/"></vote-data>
-                  <vote-view votes="{{votes}}"></votes-view>
+                 <!-- <vote-data votes="{{votes}}" location="https://polypol.firebaseio.com/"></vote-data> -->
+                <!-- <firebase-app name="polypol" database-url="https://polypol.firebaseio.com/"></firebase-app> -->
+                <vote-data votes="{{votes}}" location="https://polypol.firebaseio.com/"></vote-data>
+                <vote-view votes="{{votes}}"></votes-view>
               </paper-material>
             </section>
 
