@@ -49,8 +49,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 is: 'vote-view',
 
                 properties: {
-                    orders: Array,
-                    dbString: 'https://polypol.firebaseio.com/'
+                    dbString: 'https://polypol.firebaseio.com/',
+                    votes: {
+                        type: Array
+                    }
                 },
 
                 updateCandidatePartial: function(section, candidate, action) {
@@ -113,6 +115,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     } else {
                         console.log('no vote added');
                     }
+
+                    console.log(this);
                 },
 
                 addName: function(e) {

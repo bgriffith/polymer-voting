@@ -21,7 +21,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </style>
 
     <paper-input section="sec_02" candidate="villano" action="add" id="voteValue" on-keydown="voteInput"></paper-input> <!-- on-blur="_hideInput"-->
-    <div>Hello from <span>{{chosenName}}</span></div>
+
+    <template is="dom-repeat" items="{{votes}}" as="vote">
+      <h4>[[vote]]</h4>
+      Height: <span>[[dinosaur.height]]</span>m
+    </template>
   </template>
   <script>
   (function() {
@@ -51,7 +55,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         voteInput: function(e) {
             if (e.keyCode === 13 || e.keyCode === 9) {
-
+                console.log(this);
                 //this.chosenName = this.$.userName.value;
                 //console.log(this.chosenName); //get the value of the name
 
