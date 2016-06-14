@@ -9,7 +9,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../../bower_components/polymer/polymer.html">
-<!-- <link rel="import" href="../../bower_components/firebase-element/firebase-collection.html"> -->
+<link rel="import" href="../../bower_components/firebase-element/firebase-collection.html">
 <link rel="import" href="../vote-controls/vote-controls.html">
 
 
@@ -22,7 +22,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         <paper-material>
             <!-- 'fire()' method attached created the event 'add-name'. 'add-to-name' listens to it and fires addName -->
-            <vote-controls on-add-vote="addName"></vote-controls>
+            <vote-controls votes={{votes}} on-change-vote-input="updateCandidateInput"></vote-controls>
         </paper-material>
 
         <!-- <paper-material>
@@ -50,7 +50,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                 properties: {
                     orders: Array,
-                    dbString: 'https://polypol-f00cf.firebaseio.com/'
+                    dbString: 'https://polypol.firebaseio.com/'
                 },
 
                 updateCandidatePartial: function(section, candidate, action) {
@@ -102,16 +102,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     });
                 },
 
-                updateCandidateInput: function (section, candidate, e) {
-                    var dbTarget = new Firebase(this.properties.dbString + section);
+                updateCandidateInput: function (e) {
+                    var dbTarget = new Firebase(this.properties.dbString + e.detail.section);
                     var valueObject = {};
-                    valueObject[candidate] = e.detail.value;
+                    var newValue = Number(e.detail.value);
 
-                    dbTarget.update(valueObject);
+                    if (newValue > 0 && !NaN ) {
+                        valueObject[e.detail.candidate] = e.detail.value;
+                        dbTarget.update(valueObject);
+                    } else {
+                        console.log('no vote added');
+                    }
                 },
 
                 addName: function(e) {
-
+                     console.log(e);
                     //Get the database from the ID of the element
                     //database = this.$.polypol;
 
@@ -126,25 +131,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     // var orderKey = orderID.key();
                     // console.log(orderKey);
 
-                    database = new Firebase('https://polypol-f00cf.firebaseio.com/');
-                    dbString = 'https://polypol-f00cf.firebaseio.com/';
+                    database = new Firebase('https://polypol.firebaseio.com/');
+                    dbString = 'https://polypol.firebaseio.com/';
 
                     /**
                      * Creates the childs in the database
                      * Use in a loop!!
                      * @param {Number} i
                      */
-                    // var makeData = function(i){
-                    //     var leadZero = i < 10 ? '0' : ''
-                    //     var section = 'sec_' + leadZero;
-                    //
-                    //     database.child(section + i).set({
-                    //         villano: 0,
-                    //         decri: 0,
-                    //         total: 0
-                    //     })
-                    // }
-                    //
+                    var makeData = function(i){
+                        var leadZero = i < 10 ? '0' : ''
+                        var section = 'sec_' + leadZero;
+
+                        database.child(section + i).set({
+                            villano: 0,
+                            decri: 0,
+                            total: 0
+                        })
+                    }
+
                     // var makeTotal = function(i){
                     //     database.child(section + '_' + i).set({
                     //         villano: 0,
@@ -154,7 +159,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     //
                     // }
 
-                    //for(l=1; l < 53; l++){ makeData(l); }
+                    for(l=1; l < 53; l++){ makeData(l); }
 
                     /**
                      * Gets the data from the database and outputs the number

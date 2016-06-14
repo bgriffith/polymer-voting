@@ -20,7 +20,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
-    <paper-input id="userName" on-keydown="setName"></paper-input> <!-- on-blur="_hideInput"-->
+    <paper-input section="sec_02" candidate="villano" action="add" id="voteValue" on-keydown="voteInput"></paper-input> <!-- on-blur="_hideInput"-->
     <div>Hello from <span>{{chosenName}}</span></div>
   </template>
   <script>
@@ -49,16 +49,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             this.$.input.focus();
         },
 
-        setName: function(e) {
+        voteInput: function(e) {
             if (e.keyCode === 13 || e.keyCode === 9) {
 
-                this.chosenName = this.$.userName.value;
-                console.log(this.chosenName); //get the value of the name
-
+                //this.chosenName = this.$.userName.value;
+                //console.log(this.chosenName); //get the value of the name
 
                 //Fires the 'add-name' event; It will be listened as 'on-add-name'
-                this.fire('add-name', {value: this.$.userName.value});
-                this.$.userName.value = null;
+                this.fire('change-vote-input', {
+                    section: this.$.voteValue.getAttribute('section'),
+                    candidate: this.$.voteValue.getAttribute('candidate'),
+                    value: this.$.voteValue.value
+                });
+                //this.$.userName.value = null;
             }
         }
 
