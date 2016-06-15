@@ -20,11 +20,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
-    <paper-input section="sec_02" candidate="villano" action="add" id="voteValue" on-keydown="voteInput"></paper-input> <!-- on-blur="_hideInput"-->
+    <!-- <paper-input section="sec_02" candidate="villano" action="add" id="voteValue" on-keydown="voteInput"></paper-input>  on-blur="_hideInput"-->
     <template is="dom-repeat" items="{{votes}}">
         <template is="dom-if" if="{{isSection(item.__firebaseKey__)}}">
-            <p>{{item.__firebaseKey__}}</p>
-            <paper-input section$="section{{index}}" candidate="villano" action="add" id="voteValue" on-keydown="voteInput"></paper-input>
+            <p>{{item.__firebaseKey__}} {{filtz(user)}}</p>
+            <paper-input id="voteValue" section$="{{item.__firebaseKey__}}" candidate="villano" action="add" on-keydown="voteInput"></paper-input>
         </template>
     </template>
 
@@ -38,8 +38,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         filtz: function(item){
             //item = 'caaaazz';
-            console.log(item)
-            return item;
+            if(item == false) {
+               return false;
+            }
+
+            return true;
         },
 
         isSection: function(element){
@@ -74,17 +77,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         voteInput: function(e) {
             if (e.keyCode === 13 || e.keyCode === 9) {
-                console.log(this);
-                //this.chosenName = this.$.userName.value;
-                //console.log(this.chosenName); //get the value of the name
+                var target = e.target.domHost;
+                console.log(target.getAttribute('section'));
+                console.log(target.getAttribute('candidate'));
+                console.log(target.value);
 
-                //Fires the 'add-name' event; It will be listened as 'on-add-name'
+                //Fires the 'change-vote-input' event; It will be listened as 'change-vote-input'
                 this.fire('change-vote-input', {
-                    section: this.$.voteValue.getAttribute('section'),
-                    candidate: this.$.voteValue.getAttribute('candidate'),
-                    value: this.$.voteValue.value
+                    section: target.getAttribute('section'),
+                    candidate: target.getAttribute('section'),
+                    value: target.value
                 });
-                //this.$.userName.value = null;
             }
         }
 

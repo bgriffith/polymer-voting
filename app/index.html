@@ -125,35 +125,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <paper-material elevation="1">
                  <!-- <vote-data votes="{{votes}}" location="https://polypol.firebaseio.com/"></vote-data> -->
                 <!-- <firebase-app name="polypol" database-url="https://polypol.firebaseio.com/"></firebase-app> -->
-                <vote-data votes="{{votes}}" location="https://polypol.firebaseio.com/"></vote-data>
-                <vote-view votes="{{votes}}"></votes-view>
+                <vote-data votes="{{votes}}" user={{user}} location="https://polypol.firebaseio.com/"></vote-data>
+                <vote-view votes="{{votes}}" user={{user}}></votes-view>
               </paper-material>
             </section>
 
             <section data-route="users" tabindex="-1">
-              <paper-material elevation="1">
-                <h1 class="page-title" tabindex="-1">Users</h1>
-                <p>This is the users section</p>
-                <a href$="{{baseUrl}}users/Addy">Addy</a><br>
-                <a href$="{{baseUrl}}users/Rob">Rob</a><br>
-                <a href$="{{baseUrl}}users/Chuck">Chuck</a><br>
-                <a href$="{{baseUrl}}users/Sam">Sam</a>
-              </paper-material>
+                <p>users</p>
             </section>
 
-            <section data-route="user-info" tabindex="-1">
+            <!-- <section data-route="user-info" tabindex="-1">
               <paper-material elevation="-1">
                 <h1 class="page-title" tabindex="-1">User: {{params.name}}</h1>
                 <div>This is {{params.name}}'s section</div>
               </paper-material>
-            </section>
-
-            <section data-route="contact" tabindex="-1">
-              <paper-material elevation="1">
-                <h1 class="page-title" tabindex="-1">Contact</h1>
-                <p>This is the contact section</p>
-              </paper-material>
-            </section>
+            </section> -->
           </iron-pages>
         </div>
       </paper-scroll-header-panel>

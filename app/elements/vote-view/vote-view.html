@@ -10,24 +10,40 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/firebase-element/firebase-collection.html">
+<link rel="import" href="../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../vote-controls/vote-controls.html">
-
-
-
+<link rel="import" href="../vote-login/vote-login.html">
 
 
 <dom-module id="vote-view">
     <template>
+        <paper-material>
+            <paper-card heading="Card Title">
+                <div class="card-content">{{isAuthorized(user.isAuth)}}</div>
+                <div class="card-actions">
+                    <paper-button on-click="changeAdmin">Some action</paper-button>
+                </div>
+            </paper-card>
+        </paper-material>
+
+        <paper-material>
+
+            <!-- <template> -->
+                <!-- <template> -->
+                <!-- </template> -->
+            <!-- </template> -->
+
+            <!-- 'fire()' method attached created the event 'add-name'. 'add-to-name' listens to it and fires addName -->
+            <template is="dom-if" if="{{isAuthorized(user.isAuth)}}">
+                <vote-controls votes={{votes}} user={{isAuthorized(user.isAuth)}} on-change-vote-input="updateCandidateInput"></vote-controls>
+            </template>
+        </paper-material>
 
 
         <paper-material>
-            <!-- 'fire()' method attached created the event 'add-name'. 'add-to-name' listens to it and fires addName -->
-            <vote-controls votes={{votes}} on-change-vote-input="updateCandidateInput"></vote-controls>
+            <vote-login on-get-login="passwordCheck" user={{isAuthorized(user.isAuth)}}><vote-login>
         </paper-material>
-
-        <!-- <paper-material>
-            <orders-menu></orders-menu>
-        </paper-material> -->
         <!-- <paper-material>
             <orders-current></orders-current>
         </paper-material> -->
@@ -52,6 +68,30 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     dbString: 'https://polypol.firebaseio.com/',
                     votes: {
                         type: Array
+                    }
+                },
+
+                passwordCheck: function(e){
+                    var password = e.detail.password;
+                    //console.log(password = "elezioni");
+
+                    if(password === 'elezioni'){
+                        if(this.user.isAuth === false){
+                            this.set('user.isAuth', true);
+                        }
+                    }
+                    console.log(e.detail.password);
+                },
+
+                isAuthorized: function(){
+                    return this.user.isAuth;
+                },
+
+                changeAdmin: function() {
+                    if(this.user.isAuth === true){
+                        this.set('user.isAuth', false);
+                    }else {
+                        this.set('user.isAuth', true);
                     }
                 },
 
@@ -115,8 +155,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     } else {
                         console.log('no vote added');
                     }
-
-                    console.log(this);
                 },
 
                 addName: function(e) {
