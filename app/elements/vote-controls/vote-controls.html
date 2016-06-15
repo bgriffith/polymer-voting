@@ -23,7 +23,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <!-- <paper-input section="sec_02" candidate="villano" action="add" id="voteValue" on-keydown="voteInput"></paper-input>  on-blur="_hideInput"-->
     <template is="dom-repeat" items="{{votes}}">
         <template is="dom-if" if="{{isSection(item.__firebaseKey__)}}">
-            <p>{{item.__firebaseKey__}} {{filtz(user)}}</p>
+            <p>{{funzi(item, 'hula')}} {{filtz(user)}}</p>
             <paper-input id="voteValue" section$="{{item.__firebaseKey__}}" candidate="villano" action="add" on-keydown="voteInput"></paper-input>
         </template>
     </template>
@@ -37,12 +37,28 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         is: 'vote-controls',
 
         filtz: function(item){
-            //item = 'caaaazz';
             if(item == false) {
                return false;
             }
 
             return true;
+        },
+
+        funzi: function(section, x) {
+            console.log(x)
+            var villano = Number(section.villano);
+            var decri = Number(section.decri);
+            var total = Number(section.total);
+
+            //console.log(villano, decri, total);
+
+            var getPercentageVillano = Number((decri / total) * 100);
+            var getPercentageDecri = Number((villano / total) * 100);
+
+            var percentageVillano = isNaN(getPercentageVillano) ? 0 : getPercentageVillano ;
+            var percentageDecri = isNaN(getPercentageDecri)? 0 : getPercentageDecri;
+
+            console.log(percentageDecri, percentageVillano);
         },
 
         isSection: function(element){
