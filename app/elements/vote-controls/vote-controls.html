@@ -88,7 +88,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                   <div class="card-content">Voti {{getTotalCandidate(item, 'decri')}}</div>
                   <div class="card-actions candidate-actions">
                       <paper-icon-button icon="add-circle" on-click="voteAdd" section$="{{item.__firebaseKey__}}" candidate="decri" action="add"></paper-icon-button>
-                      <paper-icon-button icon="remove-circle" on-click="voteRemove" section$="{{item.__firebaseKey__}}" candidate="decri" action="remove"></paper-icon-button>
+                      <paper-icon-button icon="remove-circle" on-click="voteRemove" section$="{{item.__firebaseKey__}}" candidate="decri" action="remove" total$="{{getTotalCandidate(item, 'decri')}}"></paper-icon-button>
                       <paper-input id="voteValue" section$="{{item.__firebaseKey__}}" candidate="decri" action="add" on-keydown="voteInput"></paper-input>
                   </div>
                 </paper-card>
@@ -103,7 +103,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                   <div class="card-content">Voti {{getTotalCandidate(item, 'villano')}}</div>
                   <div class="card-actions">
                       <paper-icon-button icon="add-circle" on-click="voteAdd" section$="{{item.__firebaseKey__}}" candidate="villano" action="add"></paper-icon-button>
-                      <paper-icon-button icon="remove-circle" on-click="voteRemove" section$="{{item.__firebaseKey__}}" candidate="villano" action="remove"></paper-icon-button>
+                      <paper-icon-button icon="remove-circle" on-click="voteRemove" section$="{{item.__firebaseKey__}}" candidate="villano" action="remove" total$="{{getTotalCandidate(item, 'villano')}}"></paper-icon-button>
                       <paper-input id="voteValue" section$="{{item.__firebaseKey__}}" candidate="villano" action="add" on-keydown="voteInput"></paper-input>
                   </div>
                 </paper-card>
@@ -139,9 +139,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 </paper-card>
             </paper-material> -->
 
-            <iron-collapse id="collapse">
+            <!-- <iron-collapse id="collapse">
                 <p>{{getPercentage(item, villano)}} {{filtz(user)}}</p>
-            </iron-collapse>
+            </iron-collapse> -->
 
         </template>
     </template>
@@ -185,7 +185,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
             if(candidate == 'villano') {
 
-                var getPercentageVillano = Number((decri / total) * 100).toFixed(2);
+                var getPercentageVillano = Number((villano / total) * 100).toFixed(2);
                 var percentageVillano = isNaN(getPercentageVillano) ? 0 : getPercentageVillano ;
 
                 console.log('updateVillano...')
@@ -193,7 +193,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
             } else if (candidate == 'decri') {
 
-                var getPercentageDecri = Number((villano / total) * 100).toFixed(2);
+                var getPercentageDecri = Number((decri / total) * 100).toFixed(2);
                 var percentageDecri = isNaN(getPercentageDecri) ? 0 : getPercentageDecri;
 
                 return cssString + percentageDecri + "%";
@@ -261,12 +261,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         voteRemove: function (e) {
             var target = e.target.domHost;
+            var noNegative = target.getAttribute('total') > 0;
+            console.log(target.getAttribute('total'));
 
-            this.fire('vote-add', {
-                section: target.getAttribute('section'),
-                candidate: target.getAttribute('candidate'),
-                action: target.getAttribute('action')
-            });
+            if(noNegative == true ){
+                this.fire('vote-add', {
+                    section: target.getAttribute('section'),
+                    candidate: target.getAttribute('candidate'),
+                    action: target.getAttribute('action')
+                });
+            }
         }
 
         /*
