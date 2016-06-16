@@ -22,7 +22,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <paper-card heading="Card Title">
                 <div class="card-content">{{isAuthorized(user.isAuth)}}</div>
                 <div class="card-actions">
-                    <paper-button on-click="changeAdmin">Some action</paper-button>
+                    <paper-button on-click="changeAdmin">Simulate Log out</paper-button>
                 </div>
             </paper-card>
         </paper-material>
@@ -36,7 +36,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
             <!-- 'fire()' method attached created the event 'add-name'. 'add-to-name' listens to it and fires addName -->
             <template is="dom-if" if="{{isAuthorized(user.isAuth)}}">
-                <vote-controls votes={{votes}} user={{isAuthorized(user.isAuth)}} on-change-vote-input="updateCandidateInput"></vote-controls>
+                <vote-controls
+                    votes={{votes}}
+                    user={{isAuthorized(user.isAuth)}}
+                    on-change-vote-input="updateCandidateInput"
+                    on-vote-add="updateCandidatePartial"
+                    on-vote-remove="updateCandidatePartial"
+                ></vote-controls>
             </template>
         </paper-material>
 
@@ -95,16 +101,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     }
                 },
 
-                updateCandidatePartial: function(section, candidate, action) {
-                    var dbTarget = new Firebase(this.properties.dbString + section + '/' + candidate);
+                updateCandidatePartial: function(e, input) {
+                    var dbTarget = new Firebase(this.properties.dbString + e.detail.section + '/' + e.detail.candidate);
+                    
 
                     dbTarget.transaction(function(currentCandidate) {
-                        if (action == 'add') {
+                        if (e.detail.action == 'add') {
                             return currentCandidate + 1;
-                        }else if (action == 'remove') {
+                        }else if (e.detail.action == 'remove') {
                             return currentCandidate - 1;
                         }
                     });
+
+                    this.updateSectionTotal(e.detail.section, e.detail.action);
+                    this.updateCandidateMainTotal(e.detail.action, e.detail.candidate);
+                    this.updateMainTotal(e.detail.action);
                 },
 
                 updateSectionTotal: function (section, action) {
@@ -150,11 +161,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     var newValue = Number(e.detail.value);
 
                     if (newValue > 0 && !NaN ) {
-                        valueObject[e.detail.candidate] = e.detail.value;
+                        valueObject[e.detail.candidate] = Number(e.detail.value);
                         dbTarget.update(valueObject);
                     } else {
                         console.log('no vote added');
                     }
+
+                    // this.updateSectionTotal(e.detail.section, e.detail.action);
+                    // this.updateCandidateMainTotal(e.detail.action, e.detail.candidate);
+                    // this.updateMainTotal(e.detail.action);
                 },
 
                 addName: function(e) {

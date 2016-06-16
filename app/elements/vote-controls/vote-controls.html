@@ -10,6 +10,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/iron-collapse/iron-collapse.html">
 <link rel="import" href="../../bower_components/polymerfire/firebase-query.html">
 
 <dom-module id="vote-controls">
@@ -18,15 +23,130 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       :host {
         display: block;
       }
+
+      .candidate-card {
+        width: 25%;
+        display: block;
+        float: left;
+      }
+
+      .candidate-card-villano {
+        background-color: #ee3524;
+      }
+
+      .candidate-card-decri {
+        background-color: #38B3B8;
+      }
+
+      .progressBar{
+        width: 50%;
+        display: block;
+        height: 2rem;
+        float: left;
+      }
+
+      .section-container {
+        margin: 2rem 0;
+        display: block;
+        overflow: hidden;
+        border: 2px solid #444;
+      }
+
+      .section-title{
+          width: 100%;
+          text-align: center;
+          font-size: 1rem;
+          text-transform: uppercase;
+          display: block;
+          padding: 1rem 0;
+          background-color: #ffcf54;
+          border-bottom: 2px solid #444;
+      }
+
+      .progress {
+        display: block;
+        height: 1rem;
+        background-color: #38B3B8;
+        margin: 1rem;
+      }
+
+      .progress-decri {
+        background-color: #38B3B8;
+      }
+
+      .progress-villano {
+        background-color: #EE3524;
+      }
     </style>
 
     <!-- <paper-input section="sec_02" candidate="villano" action="add" id="voteValue" on-keydown="voteInput"></paper-input>  on-blur="_hideInput"-->
-    <template is="dom-repeat" items="{{votes}}">
+    <template is="dom-repeat" items="{{votes}}" id="voteControls">
         <template is="dom-if" if="{{isSection(item.__firebaseKey__)}}">
-            <p>{{funzi(item, 'hula')}} {{filtz(user)}}</p>
-            <paper-input id="voteValue" section$="{{item.__firebaseKey__}}" candidate="villano" action="add" on-keydown="voteInput"></paper-input>
+            <paper-material class="section-container" elevation="1">
+                <div class="section-title">{{item.__firebaseKey__}}</div>
+                <paper-card class="candidate-card candidate-card-decri" heading='De Cristoforo'>
+                  <div class="card-content">Voti {{getTotalCandidate(item, 'decri')}}</div>
+                  <div class="card-actions candidate-actions">
+                      <paper-icon-button icon="add-circle" on-click="voteAdd" section$="{{item.__firebaseKey__}}" candidate="decri" action="add"></paper-icon-button>
+                      <paper-icon-button icon="remove-circle" on-click="voteRemove" section$="{{item.__firebaseKey__}}" candidate="decri" action="remove"></paper-icon-button>
+                      <paper-input id="voteValue" section$="{{item.__firebaseKey__}}" candidate="decri" action="add" on-keydown="voteInput"></paper-input>
+                  </div>
+                </paper-card>
+
+                <div class="progressBar">
+                    <h3> Voti conteggiati {{getTotal(item)}} </h3>
+                    <span class="progress progress-decri" style$="{{getPercentage(item, 'decri')}}">{{getPercentage(item, 'decri', 'get')}}</span>
+                    <span class="progress progress-villano" style$="{{getPercentage(item, 'villano')}}">{{getPercentage(item, 'villano', 'get')}}</span>
+                </div>
+
+                <paper-card class="candidate-card candidate-card-villano" heading='Villano'>
+                  <div class="card-content">Voti {{getTotalCandidate(item, 'villano')}}</div>
+                  <div class="card-actions">
+                      <paper-icon-button icon="add-circle" on-click="voteAdd" section$="{{item.__firebaseKey__}}" candidate="villano" action="add"></paper-icon-button>
+                      <paper-icon-button icon="remove-circle" on-click="voteRemove" section$="{{item.__firebaseKey__}}" candidate="villano" action="remove"></paper-icon-button>
+                      <paper-input id="voteValue" section$="{{item.__firebaseKey__}}" candidate="villano" action="add" on-keydown="voteInput"></paper-input>
+                  </div>
+                </paper-card>
+            </paper-material>
+
+            <!-- <paper-material>
+                <div>{{item.__firebaseKey__}}</div>
+                <paper-card class="candidate-card" heading='De Cristoforo'>
+                    <div class="card-content"></div>
+                    <div class="card-actions">
+                        <paper-icon-button icon="refresh" on-click="toggle"></paper-icon-button>
+                        <paper-icon-button icon="search" on-click="toggle"></paper-icon-button>
+                    </div>
+                    <div class="card-actions">
+                        <paper-input id="voteValue" section$="{{item.__firebaseKey__}}" candidate="decri" action="add" on-keydown="voteInput"></paper-input>
+                    </div>
+                </paper-card>
+
+                <div class="progressBar">
+                    <span class="progress progress-decri"></span>
+                    <span class="progress progress-villano"></span>
+                </div>
+
+                <paper-card class="candidate-card" heading='Villano'>
+                  <div class="card-content"></div>
+                  <div class="card-actions">
+                    <paper-icon-button icon="refresh" on-click="toggle"></paper-icon-button>
+                    <paper-icon-button icon="search" on-click="toggle"></paper-icon-button>
+                  </div>
+                  <div class="card-actions">
+                      <paper-input id="voteValue" section$="{{item.__firebaseKey__}}" candidate="villano" action="add" on-keydown="voteInput"></paper-input>
+                  </div>
+                </paper-card>
+            </paper-material> -->
+
+            <iron-collapse id="collapse">
+                <p>{{getPercentage(item, villano)}} {{filtz(user)}}</p>
+            </iron-collapse>
+
         </template>
     </template>
+
+    <array-selector id="selector" items="{{votes}}" selected="{{selected}}" multi toggle></array-selector>
 
   </template>
   <script>
@@ -44,21 +164,43 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             return true;
         },
 
-        funzi: function(section, x) {
-            console.log(x)
+        toggle: function(e) {
+            var item = this.$.voteControls.itemForElement(e.target);
+        },
+
+        getTotal: function(section) {
+            return Number(section.total);
+        },
+
+        getTotalCandidate: function(section, candidate) {
+            return Number(section[candidate]);
+        },
+
+        getPercentage: function(section, candidate, get) {
             var villano = Number(section.villano);
             var decri = Number(section.decri);
             var total = Number(section.total);
 
-            //console.log(villano, decri, total);
+            var cssString = get == 'get' ? '' : 'width:';
 
-            var getPercentageVillano = Number((decri / total) * 100);
-            var getPercentageDecri = Number((villano / total) * 100);
+            if(candidate == 'villano') {
 
-            var percentageVillano = isNaN(getPercentageVillano) ? 0 : getPercentageVillano ;
-            var percentageDecri = isNaN(getPercentageDecri)? 0 : getPercentageDecri;
+                var getPercentageVillano = Number((decri / total) * 100).toFixed(2);
+                var percentageVillano = isNaN(getPercentageVillano) ? 0 : getPercentageVillano ;
 
-            console.log(percentageDecri, percentageVillano);
+                console.log('updateVillano...')
+                return cssString + percentageVillano + "%";
+
+            } else if (candidate == 'decri') {
+
+                var getPercentageDecri = Number((villano / total) * 100).toFixed(2);
+                var percentageDecri = isNaN(getPercentageDecri) ? 0 : getPercentageDecri;
+
+                return cssString + percentageDecri + "%";
+                console.log('updateDecri...')
+            }
+
+            // console.log(percentageDecri, percentageVillano);
         },
 
         isSection: function(element){
@@ -101,10 +243,30 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 //Fires the 'change-vote-input' event; It will be listened as 'change-vote-input'
                 this.fire('change-vote-input', {
                     section: target.getAttribute('section'),
-                    candidate: target.getAttribute('section'),
+                    candidate: target.getAttribute('candidate'),
                     value: target.value
                 });
             }
+        },
+
+        voteAdd: function (e) {
+            var target = e.target.domHost;
+
+            this.fire('vote-add', {
+                section: target.getAttribute('section'),
+                candidate: target.getAttribute('candidate'),
+                action: target.getAttribute('action')
+            });
+        },
+
+        voteRemove: function (e) {
+            var target = e.target.domHost;
+
+            this.fire('vote-add', {
+                section: target.getAttribute('section'),
+                candidate: target.getAttribute('candidate'),
+                action: target.getAttribute('action')
+            });
         }
 
         /*
