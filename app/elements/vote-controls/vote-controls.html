@@ -82,11 +82,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <template is="dom-if" if="{{isSection(item.__firebaseKey__)}}">
             <paper-material class="section-container" elevation="1">
                 <div class="section-title">{{item.__firebaseKey__}}</div>
-                <paper-card class="candidate-card candidate-card-decri" heading='De Cristoforo'>
+                <paper-card class="candidate-card candidate-card-decri" heading='De Cristofaro'>
                   <div class="card-content">Voti {{getTotalCandidate(item, 'decri')}}</div>
                   <div class="card-actions candidate-actions">
-                      <paper-icon-button icon="add-circle" on-tap="_voteAdd" section$="{{item.__firebaseKey__}}" candidate="decri" act="add">+</paper-icon-button>
-                      <paper-icon-button icon="remove-circle" on-tap="_voteRemove" section$="{{item.__firebaseKey__}}" candidate="decri" act="remove" total$="{{getTotalCandidate(item, 'decri')}}">-</paper-icon-button>
+                      <paper-icon-button icon="add-circle" on-tap="_voteAdd" section$="{{item.__firebaseKey__}}" candidate="decri" act="add"></paper-icon-button>
+                      <paper-icon-button icon="remove-circle" on-tap="_voteRemove" section$="{{item.__firebaseKey__}}" candidate="decri" act="remove" total$="{{getTotalCandidate(item, 'decri')}}"></paper-icon-button>
                       <paper-input id="voteValue" maxlength="6" section$="{{item.__firebaseKey__}}" candidate="decri" on-keydown="voteInput" oldvalue$="{{getTotalCandidate(item, 'decri')}}"></paper-input>
                   </div>
                 </paper-card>

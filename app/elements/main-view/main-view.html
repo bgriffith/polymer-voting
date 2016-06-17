@@ -34,12 +34,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </template>
     </template> -->
 
-    <firebase-collection
+    <!-- <firebase-collection
       location="https://polypol.firebaseio.com/"
       data="{{villano}}">
-   </firebase-collection>
+   </firebase-collection> -->
 
-   <template is="dom-repeat" items={{villano}}>
+   <!-- <template is="dom-repeat" items={{villano}}>
        <template is="dom-if" if="{{isGlobal(item.__firebaseKey__)}}" restamp="true">
            <p id="global" totalValue$="{{getDown(item.value)}}">TOTALE : {{item.value}}</p>
        </template>
@@ -47,24 +47,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
    <template is="dom-repeat" items={{villano}}>
        <template id="villano" is="dom-if" totalValue$="{{item.value}}" if="{{isVillano(item.__firebaseKey__)}}" restamp="true">
-           <p>Villano: {{item.value}} {{getGlobalTotal('villano', item.value)}}</p>
+           <p>Villano: {{item.value}} {{val}}</p>
        </template>
+       <p> {{getGlobalTotal('villano', ite)}}</p>
    </template>
 
    <template is="dom-repeat" items={{villano}}>
        <template id="decri" is="dom-if" if="{{isDecri(item.__firebaseKey__)}}" restamp="true">
            <p>De Cristoforo: {{item.value}}</p>
+           <p>{{val}}</p>
        </template>
-   </template>
+   </template> -->
 
-   <div> HI THERE - {{test}}</div>
+
+   <div> HI THERE {{villanoTotalNumber}}</div>
 
 </template>
   <script>
   (function() {
     'use strict';
 
-    Polymer({
+    var test = Polymer({
       is: 'main-view',
       properties: {
           totals: {
@@ -75,11 +78,36 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               type: String,
               notify: true
           },
-          test: {
+
+          villanoTotalNumber: {
               type: String,
               notify: true,
-              value: 'hey'
-          }
+              value: '...'
+          },
+
+          villanoTotalPercentage: {
+              type: String,
+              notify: true,
+              value: '...'
+          },
+
+          decriTotalNumber: {
+              type: String,
+              notify: true,
+              value: '...'
+          },
+
+          decriTotalPercentage: {
+              type: String,
+              notify: true,
+              value: '...'
+          },
+
+          globalNum: {
+              type: String,
+              notify: true,
+              value: '...'
+          },
       },
 
       getDown: function(item){
@@ -87,46 +115,31 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         return item;
       },
 
-      getGlobalTotal: function(){
+     getGlobalTotal: function(candidate){
+        var ref = new Firebase('https://polypol.firebaseio.com/');
+        var that = this;
+        // var cssString = get == 'get' ? '' : 'width:';
 
+        ref.on('value', function(snapshot) {
+            var dbData = snapshot.val();
+            var viTotal = dbData['villanototal'];
+            var deTotal = dbData['decritotal'];
+            var gbTotal = dbData['maintotal'];
+
+            that.villanoTotalNumber = viTotal;
+            that.decriTotalNumber = viTotal;
+
+            that.villanoTotalPercentage = Number((viTotal / gbTotal) * 100).toFixed(2) ;
+            that.decriTotalPercentage = Number((deTotal / gbTotal) * 100).toFixed(2);
+            console.log(that.villanoTotalPercentage, that.decriTotalPercentage);
+
+            //console.log(gbTotal, deTotal, viTotal);
+        });
       },
 
-      getGlobalTotal: function(candidate, votes, get){
-        var ref = new Firebase('https://polypol.firebaseio.com/maintotal');
-        var value;
-
-        var cssString = get == 'get' ? '' : 'width:';
-
-        function getArticlePromise() {
-            return ref.once('value').then(function(snapshot) {
-                return snapshot.val();
-            });
-        };
-
-        if(candidate == 'villano') {
-            getArticlePromise().then(function(result) {
-            //return result;
-                var total = result;
-                //console.log(total);
-                var getPercentageVillano = Number((votes / total) * 100).toFixed(2);
-                var percentageVillano = isNaN(getPercentageVillano) ? 0 : getPercentageVillano;
-                value = cssString + percentageVillano + "%";
-            });
-        } else if(candidate == 'decri') {
-            getArticlePromise().then(function(result) {
-                var total = result;
-                var getPercentageDecri = Number((votes / total) * 100).toFixed(2);
-                var percentageDecri = isNaN(getPercentageDecri) ? 0 : getPercentageDecri;
-                value = cssString + percentageDecri + "%";
-            });
-        }
-
-        setTimeout(function(){
-            //console.log(value);
-            return value;
-        },200);
-
-      },
+        ready: function() {
+            this.getGlobalTotal('villano', 20);
+        },
 
       domReady: function() {
           this.async(function() { // Wait until node is stamped
@@ -183,41 +196,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           // console.log(percentageDecri, percentageVillano);
       },
-
-      getTotal: function(votes) {
-         this.getGlobal()
-         return votes.value;
-      },
-
-    //   ready: function(){
-    //         // this.$.template.addEventListener("dom-change", function(event){
-    //         //    console.log(event);
-    //         // });
-    //         this.addEventListener("dom-change", function(event){
-    //             if(event) {
-    //                 console.log(this.properties.loading)
-    //                 this.properties.loading = true;
-    //             } else {
-    //                 this.properties.loading = false;
-    //             }
-    //         })
+      //
+    //   getTotal: function(votes) {
+    //      this.getGlobal()
+    //      return votes.value;
     //   },
 
-      isMainTotal: function(totalValue){
-          var check = totalValue == 'villanototal' || totalValue == 'decritotal' ? true : false;
-          return check;
-      },
-
-      isTotalVotes: function(totalValue){
-
-          console.log('it works');
-          if (totalValue == 'maintotal') {
-              return true;
-          }
-
-          return false;
-      }
-
+    //   isMainTotal: function(totalValue){
+    //       var check = totalValue == 'villanototal' || totalValue == 'decritotal' ? true : false;
+    //       return check;
+    //   },
+      //
+    //   isTotalVotes: function(totalValue){
+      //
+    //       console.log('it works');
+    //       if (totalValue == 'maintotal') {
+    //           return true;
+    //       }
+      //
+    //       return false;
+    //   }
     });
   })();
   </script>
