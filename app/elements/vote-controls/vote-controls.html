@@ -15,7 +15,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../bower_components/iron-collapse/iron-collapse.html">
-<link rel="import" href="../../bower_components/polymerfire/firebase-query.html">
 
 <dom-module id="vote-controls">
   <template>
@@ -79,7 +78,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
-    <!-- <paper-input section="sec_02" candidate="villano" action="add" id="voteValue" on-keydown="voteInput"></paper-input>  on-blur="_hideInput"-->
     <template is="dom-repeat" items="{{votes}}" id="voteControls">
         <template is="dom-if" if="{{isSection(item.__firebaseKey__)}}">
             <paper-material class="section-container" elevation="1">
@@ -87,9 +85,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 <paper-card class="candidate-card candidate-card-decri" heading='De Cristoforo'>
                   <div class="card-content">Voti {{getTotalCandidate(item, 'decri')}}</div>
                   <div class="card-actions candidate-actions">
-                      <paper-icon-button icon="add-circle" on-click="voteAdd" section$="{{item.__firebaseKey__}}" candidate="decri" action="add"></paper-icon-button>
-                      <paper-icon-button icon="remove-circle" on-click="voteRemove" section$="{{item.__firebaseKey__}}" candidate="decri" action="remove" total$="{{getTotalCandidate(item, 'decri')}}"></paper-icon-button>
-                      <paper-input id="voteValue" section$="{{item.__firebaseKey__}}" candidate="decri" action="add" on-keydown="voteInput"></paper-input>
+                      <paper-icon-button icon="add-circle" on-tap="_voteAdd" section$="{{item.__firebaseKey__}}" candidate="decri" act="add">+</paper-icon-button>
+                      <paper-icon-button icon="remove-circle" on-tap="_voteRemove" section$="{{item.__firebaseKey__}}" candidate="decri" act="remove" total$="{{getTotalCandidate(item, 'decri')}}">-</paper-icon-button>
+                      <paper-input id="voteValue" maxlength="6" section$="{{item.__firebaseKey__}}" candidate="decri" on-keydown="voteInput" oldvalue$="{{getTotalCandidate(item, 'decri')}}"></paper-input>
                   </div>
                 </paper-card>
 
@@ -102,47 +100,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 <paper-card class="candidate-card candidate-card-villano" heading='Villano'>
                   <div class="card-content">Voti {{getTotalCandidate(item, 'villano')}}</div>
                   <div class="card-actions">
-                      <paper-icon-button icon="add-circle" on-click="voteAdd" section$="{{item.__firebaseKey__}}" candidate="villano" action="add"></paper-icon-button>
-                      <paper-icon-button icon="remove-circle" on-click="voteRemove" section$="{{item.__firebaseKey__}}" candidate="villano" action="remove" total$="{{getTotalCandidate(item, 'villano')}}"></paper-icon-button>
-                      <paper-input id="voteValue" section$="{{item.__firebaseKey__}}" candidate="villano" action="add" on-keydown="voteInput"></paper-input>
+                      <paper-icon-button icon="add-circle" on-tap="_voteAdd" section$="{{item.__firebaseKey__}}" candidate="villano" act="add"></paper-icon-button>
+                      <paper-icon-button icon="remove-circle" on-tap="_voteRemove" section$="{{item.__firebaseKey__}}" candidate="villano" act="remove" total$="{{getTotalCandidate(item, 'villano')}}"></paper-icon-button>
+                      <paper-input id="voteValue" maxlength="6" section$="{{item.__firebaseKey__}}" candidate="villano" on-keydown="voteInput" oldvalue$="{{getTotalCandidate(item, 'villano')}}"></paper-input>
                   </div>
                 </paper-card>
             </paper-material>
-
-            <!-- <paper-material>
-                <div>{{item.__firebaseKey__}}</div>
-                <paper-card class="candidate-card" heading='De Cristoforo'>
-                    <div class="card-content"></div>
-                    <div class="card-actions">
-                        <paper-icon-button icon="refresh" on-click="toggle"></paper-icon-button>
-                        <paper-icon-button icon="search" on-click="toggle"></paper-icon-button>
-                    </div>
-                    <div class="card-actions">
-                        <paper-input id="voteValue" section$="{{item.__firebaseKey__}}" candidate="decri" action="add" on-keydown="voteInput"></paper-input>
-                    </div>
-                </paper-card>
-
-                <div class="progressBar">
-                    <span class="progress progress-decri"></span>
-                    <span class="progress progress-villano"></span>
-                </div>
-
-                <paper-card class="candidate-card" heading='Villano'>
-                  <div class="card-content"></div>
-                  <div class="card-actions">
-                    <paper-icon-button icon="refresh" on-click="toggle"></paper-icon-button>
-                    <paper-icon-button icon="search" on-click="toggle"></paper-icon-button>
-                  </div>
-                  <div class="card-actions">
-                      <paper-input id="voteValue" section$="{{item.__firebaseKey__}}" candidate="villano" action="add" on-keydown="voteInput"></paper-input>
-                  </div>
-                </paper-card>
-            </paper-material> -->
-
-            <!-- <iron-collapse id="collapse">
-                <p>{{getPercentage(item, villano)}} {{filtz(user)}}</p>
-            </iron-collapse> -->
-
         </template>
     </template>
 
@@ -155,6 +118,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     Polymer({
         is: 'vote-controls',
+
+        properties: {
+            one: Array
+        },
+
 
         filtz: function(item){
             if(item == false) {
@@ -179,7 +147,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         getPercentage: function(section, candidate, get) {
             var villano = Number(section.villano);
             var decri = Number(section.decri);
+
             var total = Number(section.total);
+            console.log('===>' + candidate);
 
             var cssString = get == 'get' ? '' : 'width:';
 
@@ -188,7 +158,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 var getPercentageVillano = Number((villano / total) * 100).toFixed(2);
                 var percentageVillano = isNaN(getPercentageVillano) ? 0 : getPercentageVillano ;
 
-                console.log('updateVillano...')
+                //console.log('updateVillano...')
                 return cssString + percentageVillano + "%";
 
             } else if (candidate == 'decri') {
@@ -214,75 +184,57 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             return false;
         },
 
-        properties: {
-
-            chosenName: {
-              type: String,
-              value: '',
-              notify: true
-            },
-
-            blurred: {
-              type: Boolean,
-              value: false,
-              notify: true
-            }
-        },
-
-        focus: function(){
-            this.$.input.focus();
-        },
-
         voteInput: function(e) {
             if (e.keyCode === 13 || e.keyCode === 9) {
                 var target = e.target.domHost;
-                console.log(target.getAttribute('section'));
-                console.log(target.getAttribute('candidate'));
-                console.log(target.value);
+                // var opponentVotes = target.getAttribute('candidate') == 'villano' ? 'decri' : 'villano';
+                var section = target.getAttribute('section');
+                var oldvalue = target.getAttribute('oldvalue');
+                var newValue = Number(target.value);
+                if (target.value == oldvalue){console.log("it's the same"); return;};
 
-                //Fires the 'change-vote-input' event; It will be listened as 'change-vote-input'
-                this.fire('change-vote-input', {
-                    section: target.getAttribute('section'),
-                    candidate: target.getAttribute('candidate'),
-                    value: target.value
-                });
+                var difCalc = oldvalue - newValue;
+                var difference = Math.abs(difCalc);
+                var inputAction = newValue > oldvalue ? 'add' : 'remove';
+                var noNegative = newValue > 0;
+
+                console.log(oldvalue + ' - ', newValue + ' - ', difference);
+
+                if (noNegative == true) {
+                    this.fire('change-vote-input', {
+                        section: target.getAttribute('section'),
+                        candidate: target.getAttribute('candidate'),
+                        action: inputAction,
+                        amount: difference,
+                        value: newValue
+                    });
+                }
+                target.value = null;
             }
         },
 
-        voteAdd: function (e) {
+        _voteAdd: function (e) {
             var target = e.target.domHost;
 
             this.fire('vote-add', {
                 section: target.getAttribute('section'),
                 candidate: target.getAttribute('candidate'),
-                action: target.getAttribute('action')
+                action: target.getAttribute('act')
             });
         },
 
-        voteRemove: function (e) {
+        _voteRemove: function (e) {
             var target = e.target.domHost;
             var noNegative = target.getAttribute('total') > 0;
-            console.log(target.getAttribute('total'));
 
             if(noNegative == true ){
                 this.fire('vote-add', {
                     section: target.getAttribute('section'),
                     candidate: target.getAttribute('candidate'),
-                    action: target.getAttribute('action')
+                    action: target.getAttribute('act')
                 });
             }
         }
-
-        /*
-        _hideInput: function(e) {
-            //if(this.$.userName.value){
-                console.log('Animation to show input');
-                this.chosenName = this.$.userName.value;
-                this.fire('add-name', {value: this.$.userName.value});
-                this.$.userName.value = null;
-            //}
-        }
-        */
     });
   })();
   </script>

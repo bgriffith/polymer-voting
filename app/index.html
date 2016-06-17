@@ -16,7 +16,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="generator" content="Polymer Starter Kit">
-  <title>Polymer Starter Kit</title>
+  <title>De</title>
 
   <!-- Place favicon.ico in the `app/` directory -->
 
@@ -79,17 +79,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <paper-menu class="app-menu" attr-for-selected="data-route" selected="[[route]]">
           <a data-route="home" href="{{baseUrl}}">
             <iron-icon icon="home"></iron-icon>
-            <span>Home</span>
+            <span>Exit Polls</span>
           </a>
 
-          <a data-route="users" href="{{baseUrl}}users">
+          <a data-route="admin" href="{{baseUrl}}admin">
             <iron-icon icon="info"></iron-icon>
-            <span>Users</span>
-          </a>
-
-          <a data-route="contact" href="{{baseUrl}}contact">
-            <iron-icon icon="mail"></iron-icon>
-            <span>Contact</span>
+            <span>Admin</span>
           </a>
         </paper-menu>
       </paper-scroll-header-panel>
@@ -108,39 +103,39 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           <!-- Application name -->
           <div class="middle middle-container">
-            <div class="app-name">Polymer Starter Kit</div>
+            <div class="app-name">DE CRISTOFORO SINDACO</div>
           </div>
 
           <!-- Application sub title -->
           <div class="bottom bottom-container">
-            <div class="bottom-title">The future of the web today</div>
+            <div class="bottom-title">PolyPol 0.5 by nks</div>
           </div>
         </paper-toolbar>
 
         <!-- Main Content -->
         <div class="content">
           <iron-pages attr-for-selected="data-route" selected="{{route}}">
-            <section data-route="home" tabindex="-1">
+            <section data-route="home" tabindex="1">
+              <!-- <paper-material elevation="1">
+                <my-greeting></my-greeting>
 
-              <paper-material elevation="1">
-                 <!-- <vote-data votes="{{votes}}" location="https://polypol.firebaseio.com/"></vote-data> -->
-                <!-- <firebase-app name="polypol" database-url="https://polypol.firebaseio.com/"></firebase-app> -->
-                <vote-data votes="{{votes}}" user={{user}} location="https://polypol.firebaseio.com/"></vote-data>
-                <vote-view votes="{{votes}}" user={{user}}></votes-view>
-                <vote-view votes="{{votes}}" user={{user}}></votes-view>
-              </paper-material>
-            </section>
+                <p class="subhead">You now have:</p>
+                <my-list></my-list>
 
-            <section data-route="users" tabindex="-1">
-                <p>users</p>
-            </section>
-
-            <!-- <section data-route="user-info" tabindex="-1">
+                <p>Looking for more Web App layouts? Check out our <a href="https://github.com/PolymerElements/app-layout-templates">layouts</a> collection. You can also <a href="http://polymerelements.github.io/app-layout-templates/">preview</a> them live.</p>
+              </paper-material> -->
               <paper-material elevation="-1">
-                <h1 class="page-title" tabindex="-1">User: {{params.name}}</h1>
-                <div>This is {{params.name}}'s section</div>
+                <main-view votes="{{votes}}"></main-view>
               </paper-material>
-            </section> -->
+            </section>
+
+            <section data-route="admin" tabindex="-1">
+                <paper-material elevation="1">
+                    <vote-data votes="{{votes}}" user={{user}} location="https://polypol.firebaseio.com/"></vote-data>
+                    <vote-view votes="{{votes}}" user={{user}}></votes-view>
+                    <vote-view votes="{{votes}}" user={{user}}></votes-view>
+                </paper-material>
+            </section>
           </iron-pages>
         </div>
       </paper-scroll-header-panel>
@@ -149,6 +144,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <paper-toast id="toast">
       <span class="toast-hide-button" role="button" tabindex="0" onclick="app.$.toast.hide()">Ok</span>
     </paper-toast>
+
+    <!-- Uncomment next block to enable Service Worker support (1/2) -->
+    <!--
+    <paper-toast id="caching-complete"
+                 duration="6000"
+                 text="Caching complete! This app will work offline.">
+    </paper-toast>
+
+    <platinum-sw-register auto-register
+                          clients-claim
+                          skip-waiting
+                          base-uri="bower_components/platinum-sw/bootstrap"
+                          on-service-worker-installed="displayInstalledToast">
+      <platinum-sw-cache default-cache-strategy="fastest"
+                         cache-config-file="cache-config.json">
+      </platinum-sw-cache>
+    </platinum-sw-register>
+    -->
 
   </template>
 

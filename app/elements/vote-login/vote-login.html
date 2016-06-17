@@ -11,7 +11,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
-<!-- <link rel="import" href="../../bower_components/paper-dialog/paper-dialog-scrollable.html"> -->
 <link rel="import" href="../../bower_components/neon-animation/animations/scale-up-animation.html">
 <link rel="import" href="../../bower_components/neon-animation/animations/fade-out-animation.html">
 
@@ -23,11 +22,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
     <section on-click="clickHandler">
-        <h4>Transitions</h4>
-        <paper-button data-dialog="animated">transitions</paper-button>
-        <paper-dialog id="animated" entry-animation="scale-up-animation" exit-animation="fade-out-animation" opened="[[!user]]" modal with-backdrop>
+        <h2> L'accesso a quest'area é riservato allo staff. Se si é in possesso della password, cliccare sul pulsante per eseguire il login </h2>
+        <paper-button data-dialog="animated">Login</paper-button>
+        <paper-dialog id="animated" entry-animation="scale-up-animation" exit-animation="fade-out-animation" modal with-backdrop alwaysOnTop>
+            <h3> Inserire la password per modificare i voti</h3>
             <paper-input id="passValue"></paper-input>
-            <paper-button on-click="getPassword">Login</paper-button>
+            <paper-button on-click="_getPassword">Login</paper-button>
+            <paper-button on-click="cancelAction">Annulla</paper-button>
         </paper-dialog>
   </section>
   </template>
@@ -46,16 +47,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       },
 
-      getPassword: function(e){
+    _getPassword: function(e){
 
-          //var id = this.$.animated ;
         var dialog = this.$.animated;
         var password = this.$.passValue.value;
 
-        if(password == 'elezioni') {
+        if(password == 'enricosindaco') {
             dialog.close();
             this.fire('get-login', { password: this.$.passValue.value });
         }
+      },
+
+      cancelAction: function() {
+          var dialog = this.$.animated;
+          dialog.close();
       },
 
       clickHandler: function(e) {

@@ -1,0 +1,224 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-spinner/paper-spinner.html">
+<link rel="import" href="../../bower_components/firebase-element/firebase-collection.html">
+
+<dom-module id="main-view">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+        <paper-spinner active="{{spinner}}"></paper-spinner>
+
+
+    <!-- <template is="dom-repeat" items={{votes}}>
+        <template is="dom-if" if="{{isMainTotal(item.__firebaseKey__)}}">
+            <p>{{getTotal(item)}} {{getTotal(item, 'percentage')}}</p>
+        </template>
+    </template>
+
+    <template is="dom-repeat" items={{votes}}>
+        <template is="dom-if" if="{{isTotalVotes(item.__firebaseKey__)}}">
+            <p>{{getGlobal(item)}}</p>
+        </template>
+    </template> -->
+
+    <firebase-collection
+      location="https://polypol.firebaseio.com/"
+      data="{{villano}}">
+   </firebase-collection>
+
+   <template is="dom-repeat" items={{villano}}>
+       <template is="dom-if" if="{{isGlobal(item.__firebaseKey__)}}" restamp="true">
+           <p id="global" totalValue$="{{getDown(item.value)}}">TOTALE : {{item.value}}</p>
+       </template>
+   </template>
+
+   <template is="dom-repeat" items={{villano}}>
+       <template id="villano" is="dom-if" totalValue$="{{item.value}}" if="{{isVillano(item.__firebaseKey__)}}" restamp="true">
+           <p>Villano: {{item.value}} {{getGlobalTotal('villano', item.value)}}</p>
+       </template>
+   </template>
+
+   <template is="dom-repeat" items={{villano}}>
+       <template id="decri" is="dom-if" if="{{isDecri(item.__firebaseKey__)}}" restamp="true">
+           <p>De Cristoforo: {{item.value}}</p>
+       </template>
+   </template>
+
+   <div> HI THERE - {{test}}</div>
+
+</template>
+  <script>
+  (function() {
+    'use strict';
+
+    Polymer({
+      is: 'main-view',
+      properties: {
+          totals: {
+              type: Object,
+              notify: true,
+          },
+          something:{
+              type: String,
+              notify: true
+          },
+          test: {
+              type: String,
+              notify: true,
+              value: 'hey'
+          }
+      },
+
+      getDown: function(item){
+        var gino = this.getGlobalTotal();
+        return item;
+      },
+
+      getGlobalTotal: function(){
+
+      },
+
+      getGlobalTotal: function(candidate, votes, get){
+        var ref = new Firebase('https://polypol.firebaseio.com/maintotal');
+        var value;
+
+        var cssString = get == 'get' ? '' : 'width:';
+
+        function getArticlePromise() {
+            return ref.once('value').then(function(snapshot) {
+                return snapshot.val();
+            });
+        };
+
+        if(candidate == 'villano') {
+            getArticlePromise().then(function(result) {
+            //return result;
+                var total = result;
+                //console.log(total);
+                var getPercentageVillano = Number((votes / total) * 100).toFixed(2);
+                var percentageVillano = isNaN(getPercentageVillano) ? 0 : getPercentageVillano;
+                value = cssString + percentageVillano + "%";
+            });
+        } else if(candidate == 'decri') {
+            getArticlePromise().then(function(result) {
+                var total = result;
+                var getPercentageDecri = Number((votes / total) * 100).toFixed(2);
+                var percentageDecri = isNaN(getPercentageDecri) ? 0 : getPercentageDecri;
+                value = cssString + percentageDecri + "%";
+            });
+        }
+
+        setTimeout(function(){
+            //console.log(value);
+            return value;
+        },200);
+
+      },
+
+      domReady: function() {
+          this.async(function() { // Wait until node is stamped
+              var a = this.$$('#decri');
+              //console.log(a);
+          });
+          return 'nico';
+      },
+
+      isGlobal:function(item) {
+          if(item == 'maintotal') {
+              return true;
+          }
+
+          return false;
+      },
+
+      isVillano:function(item) {
+          if(item == 'villanototal') {
+              return true;
+          }
+
+          return false;
+      },
+
+      isDecri:function(item) {
+          if(item == 'decritotal') {
+              return true;
+          }
+
+          return false;
+      },
+
+      getPercentage: function(total, votes, get) {
+
+          var cssString = get == 'get' ? '' : 'width:';
+
+          if(candidate == 'villano') {
+
+              var getPercentageVillano = Number((villano / total) * 100).toFixed(2);
+              var percentageVillano = isNaN(getPercentageVillano) ? 0 : getPercentageVillano ;
+
+              console.log('updateVillano...')
+              return cssString + percentageVillano + "%";
+
+          } else if (candidate == 'decri') {
+
+              var getPercentageDecri = Number((decri / total) * 100).toFixed(2);
+              var percentageDecri = isNaN(getPercentageDecri) ? 0 : getPercentageDecri;
+
+              return cssString + percentageDecri + "%";
+              console.log('updateDecri...')
+          }
+
+          // console.log(percentageDecri, percentageVillano);
+      },
+
+      getTotal: function(votes) {
+         this.getGlobal()
+         return votes.value;
+      },
+
+    //   ready: function(){
+    //         // this.$.template.addEventListener("dom-change", function(event){
+    //         //    console.log(event);
+    //         // });
+    //         this.addEventListener("dom-change", function(event){
+    //             if(event) {
+    //                 console.log(this.properties.loading)
+    //                 this.properties.loading = true;
+    //             } else {
+    //                 this.properties.loading = false;
+    //             }
+    //         })
+    //   },
+
+      isMainTotal: function(totalValue){
+          var check = totalValue == 'villanototal' || totalValue == 'decritotal' ? true : false;
+          return check;
+      },
+
+      isTotalVotes: function(totalValue){
+
+          console.log('it works');
+          if (totalValue == 'maintotal') {
+              return true;
+          }
+
+          return false;
+      }
+
+    });
+  })();
+  </script>
+</dom-module>
