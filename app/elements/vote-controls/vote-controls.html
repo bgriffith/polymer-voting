@@ -24,13 +24,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       .candidate-card {
-        width: 25%;
-        display: block;
-        float: left;
+          width: 10%;
+          display: inline-block;
+          text-align: center;
+          padding: 1rem;
+          font-size: 4rem;
+      }
+
+      .candidate-actions {
+          display: inline-block;
+          vertical-align: top;
       }
 
       .candidate-card-villano {
-        background-color: #ee3524;
+        background-color: #ff5252;
       }
 
       .candidate-card-decri {
@@ -48,7 +55,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         margin: 2rem 0;
         display: block;
         overflow: hidden;
-        border: 2px solid #444;
       }
 
       .section-title{
@@ -57,54 +63,187 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           font-size: 1rem;
           text-transform: uppercase;
           display: block;
-          padding: 1rem 0;
-          background-color: #ffcf54;
-          border-bottom: 2px solid #444;
+          padding: 0.8rem 0;
+          background-color: #607D8B;
+          overflow: hidden;
+          color: white;
+      }
+
+      .section-votes {
+          float: right;
+          padding: 0;
+          margin: 0;
+          margin-right: 1vw;
+          font-weight: 400;
+      }
+
+      .section-number {
+          float: left;
+          padding: 0;
+          margin: 0;
+          margin-left: 1vw;
+          font-weight: 400;
+      }
+
+      .progress-wrapper {
+        display: block;
+        width: 100%;
+        background-color: #FF5252;
+        height: 0.6rem;
+        margin: 0 1rem;
+        margin-bottom: -1rem;
+        float: left;
+      }
+
+      .progress-wrapper-decri {
+        color: #38B3B8;
       }
 
       .progress {
         display: block;
-        height: 1rem;
+        height: 0.6rem;
         background-color: #38B3B8;
-        margin: 1rem;
+        margin-bottom: -1rem;
+        float: left;
       }
 
       .progress-decri {
         background-color: #38B3B8;
+        transition: 2s;
       }
 
       .progress-villano {
-        background-color: #EE3524;
+        background-color: #FF5252;
+        transition: 2s;
+        display: none;
       }
+
+      .span-title {
+          display: inline-block;
+          height: 30%;
+          padding: 0 1rem;
+      }
+
+      .vote-input{
+          display: inline-block;
+          width: 60%;
+          text-align: center;
+          padding: 0 1rem;
+      }
+
+      .floated-label-placeholder {
+          display: none;
+      }
+
+      .actions-top {
+        width: 100%;
+        float: left;
+        margin: 0.7px 1rem;
+        text-align: left;
+      }
+
+      paper-icon-button.big {
+          width: 60px;
+          height: 60px;
+      }
+
+      .icons-group{
+          display: inline-block;
+          width: 60%;
+      }
+
+      .percentage-text {
+          display: inline-block;
+            vertical-align: bottom;
+            width: 35%;
+            text-align: right;
+       }
+
+       .add-button{
+            color: #009688;
+       }
+
+       .remove-button{
+            color: #FF5722;
+       }
+
+       .divider {
+           height: 1px;
+            /* width: 100%; */
+            background-color: rgba(96, 125, 139, 0.17);
+            display: block;
+            margin: 1rem .5rem;
+       }
+
+       .panel {
+           margin: 1rem;
+       }
     </style>
 
     <template is="dom-repeat" items="{{votes}}" id="voteControls">
         <template is="dom-if" if="{{isSection(item.__firebaseKey__)}}">
             <paper-material class="section-container" elevation="1">
-                <div class="section-title">{{item.__firebaseKey__}}</div>
-                <paper-card class="candidate-card candidate-card-decri" heading='De Cristofaro'>
-                  <div class="card-content">Voti {{getTotalCandidate(item, 'decri')}}</div>
-                  <div class="card-actions candidate-actions">
-                      <paper-icon-button icon="add-circle" on-tap="_voteAdd" section$="{{item.__firebaseKey__}}" candidate="decri" act="add"></paper-icon-button>
-                      <paper-icon-button icon="remove-circle" on-tap="_voteRemove" section$="{{item.__firebaseKey__}}" candidate="decri" act="remove" total$="{{getTotalCandidate(item, 'decri')}}"></paper-icon-button>
-                      <paper-input id="voteValue" maxlength="6" section$="{{item.__firebaseKey__}}" candidate="decri" on-keydown="voteInput" oldvalue$="{{getTotalCandidate(item, 'decri')}}"></paper-input>
-                  </div>
-                </paper-card>
+                <div class="section-title"><h3 class="section-number">{{item.__firebaseKey__}}</h3> <h3 class="section-votes"> {{getTotal(item)}} VOTI RIPORTATI </h3></div>
+                <paper-material elevation="-1" class="panel">
+                    <div class="candidate-card candidate-card-decri">D</div>
+                    <div class="card-actions candidate-actions">
+                        <div class="actions-group">
+                            <div class="actions-top">
+                                <div class="icons-group">
+                                    <paper-icon-button class="big remove-button" icon="remove-circle" on-tap="_voteRemove" section$="{{item.__firebaseKey__}}" candidate="decri" act="remove" total$="{{getTotalCandidate(item, 'decri')}}"></paper-icon-button>
+                                    <paper-icon-button class="big add-button" icon="add-circle" on-tap="_voteAdd" section$="{{item.__firebaseKey__}}" candidate="decri" act="add"></paper-icon-button>
+                                </div>
+                                <span class="percentage-text">
+                                    {{getPercentage(item, 'decri', 'get')}}
+                                </span>
+                            </div>
+                            <div class="progress-wrapper">
+                                <span class="progress progress-decri" style$="{{getPercentage(item, 'decri')}}"></span>
+                            </div>
+                        </div>
+                        <div class="card-content"><span class="span-title"> VOTI </span>
+                        <paper-input id="voteValue" class="vote-input" maxlength="6" section$="{{item.__firebaseKey__}}" candidate="decri" on-keydown="voteInput" oldvalue$="{{getTotalCandidate(item, 'decri')}}" placeholder="{{getTotalCandidate(item, 'decri')}}" noLabelFloat></paper-input></div>
+                    </div>
+                </paper-material>
 
-                <div class="progressBar">
-                    <h3> Voti conteggiati {{getTotal(item)}} </h3>
-                    <span class="progress progress-decri" style$="{{getPercentage(item, 'decri')}}">{{getPercentage(item, 'decri', 'get')}}</span>
+                <div class="divider"></div>
+
+                <paper-material elevation="-1" class="panel">
+                    <div class="candidate-card candidate-card-villano">V</div>
+                    <div class="card-actions candidate-actions">
+                        <div class="actions-group">
+                            <div class="actions-top">
+                                <div class="icons-group">
+                                    <paper-icon-button class="big remove-button" icon="remove-circle" on-tap="_voteRemove" section$="{{item.__firebaseKey__}}" candidate="villano" act="remove" total$="{{getTotalCandidate(item, 'villano')}}"></paper-icon-button>
+                                    <paper-icon-button class="big add-button" icon="add-circle" on-tap="_voteAdd" section$="{{item.__firebaseKey__}}" candidate="villano" act="add"></paper-icon-button>
+                                </div>
+                                <span class="percentage-text">
+                                    {{getPercentage(item, 'villano', get)}}
+                                </span>
+                            </div>
+                            <div class="progress-wrapper">
+                                <span class="progress progress-villano" style$="{{getPercentage(item, 'villano')}}"></span>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <span class="span-title"> VOTI </span>
+                            <paper-input id="voteValue" class="vote-input" maxlength="6" section$="{{item.__firebaseKey__}}" candidate="villano" on-keydown="voteInput" oldvalue$="{{getTotalCandidate(item, 'villano')}}" placeholder="{{getTotalCandidate(item, 'villano')}}" noLabelFloat></paper-input></div>
+                    </div>
+                </paper-material>
+
+                <!-- <div class="progressBar">
+
                     <span class="progress progress-villano" style$="{{getPercentage(item, 'villano')}}">{{getPercentage(item, 'villano', 'get')}}</span>
-                </div>
+                </div> -->
 
-                <paper-card class="candidate-card candidate-card-villano" heading='Villano'>
+                <!-- <paper-card class="candidate-card candidate-card-villano" heading='Villano'>
                   <div class="card-content">Voti {{getTotalCandidate(item, 'villano')}}</div>
                   <div class="card-actions">
                       <paper-icon-button icon="add-circle" on-tap="_voteAdd" section$="{{item.__firebaseKey__}}" candidate="villano" act="add"></paper-icon-button>
                       <paper-icon-button icon="remove-circle" on-tap="_voteRemove" section$="{{item.__firebaseKey__}}" candidate="villano" act="remove" total$="{{getTotalCandidate(item, 'villano')}}"></paper-icon-button>
                       <paper-input id="voteValue" maxlength="6" section$="{{item.__firebaseKey__}}" candidate="villano" on-keydown="voteInput" oldvalue$="{{getTotalCandidate(item, 'villano')}}"></paper-input>
                   </div>
-                </paper-card>
+                </paper-card> -->
             </paper-material>
         </template>
     </template>

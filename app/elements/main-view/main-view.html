@@ -19,46 +19,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         display: block;
       }
     </style>
-        <paper-spinner active="{{spinner}}"></paper-spinner>
-
-
-    <!-- <template is="dom-repeat" items={{votes}}>
-        <template is="dom-if" if="{{isMainTotal(item.__firebaseKey__)}}">
-            <p>{{getTotal(item)}} {{getTotal(item, 'percentage')}}</p>
-        </template>
-    </template>
-
-    <template is="dom-repeat" items={{votes}}>
-        <template is="dom-if" if="{{isTotalVotes(item.__firebaseKey__)}}">
-            <p>{{getGlobal(item)}}</p>
-        </template>
-    </template> -->
-
-    <!-- <firebase-collection
-      location="https://polypol.firebaseio.com/"
-      data="{{villano}}">
-   </firebase-collection> -->
-
-   <!-- <template is="dom-repeat" items={{villano}}>
-       <template is="dom-if" if="{{isGlobal(item.__firebaseKey__)}}" restamp="true">
-           <p id="global" totalValue$="{{getDown(item.value)}}">TOTALE : {{item.value}}</p>
-       </template>
-   </template>
-
-   <template is="dom-repeat" items={{villano}}>
-       <template id="villano" is="dom-if" totalValue$="{{item.value}}" if="{{isVillano(item.__firebaseKey__)}}" restamp="true">
-           <p>Villano: {{item.value}} {{val}}</p>
-       </template>
-       <p> {{getGlobalTotal('villano', ite)}}</p>
-   </template>
-
-   <template is="dom-repeat" items={{villano}}>
-       <template id="decri" is="dom-if" if="{{isDecri(item.__firebaseKey__)}}" restamp="true">
-           <p>De Cristoforo: {{item.value}}</p>
-           <p>{{val}}</p>
-       </template>
-   </template> -->
-
+        <!-- <paper-spinner active="{{spinner}}"></paper-spinner> -->
 
    <div> HI THERE {{villanoTotalNumber}}</div>
 

@@ -18,40 +18,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <dom-module id="vote-view">
     <template>
-        <paper-material>
-            <!-- <paper-card heading="Card Title">
-                <div class="card-content">{{isAuthorized(user.isAuth)}}</div>
-                <div class="card-actions">
-                    <paper-button on-click="changeAdmin">Simulate Log out</paper-button>
-                </div>
-            </paper-card> -->
-        </paper-material>
+        <template is="dom-if" if="{{isAuthorized(user.isAuth)}}">
+            <vote-controls
+                votes={{votes}}
+                user={{isAuthorized(user.isAuth)}}
+                on-change-vote-input="updateCandidateInput"
+                on-vote-add="updateCandidatePartial"
+                on-vote-remove="updateCandidatePartial"
+            ></vote-controls>
+        </template>
 
-        <paper-material>
-
-            <!-- <template> -->
-                <!-- <template> -->
-                <!-- </template> -->
-            <!-- </template> -->
-
-            <!-- 'fire()' method attached created the event 'add-name'. 'add-to-name' listens to it and fires addName -->
-            <template is="dom-if" if="{{isAuthorized(user.isAuth)}}">
-                <vote-controls
-                    votes={{votes}}
-                    user={{isAuthorized(user.isAuth)}}
-                    on-change-vote-input="updateCandidateInput"
-                    on-vote-add="updateCandidatePartial"
-                    on-vote-remove="updateCandidatePartial"
-                ></vote-controls>
-            </template>
-        </paper-material>
-
-            <template is="dom-if" if="{{!isAuthorized(user.isAuth)}}">
-                <paper-material>
-                    <vote-login on-get-login="passwordCheck" user={{isAuthorized(user.isAuth)}}><vote-login>
-                </paper-material>
-            </template>
-
+        <template is="dom-if" if="{{!isAuthorized(user.isAuth)}}">
+            <paper-material>
+                <vote-login on-get-login="passwordCheck" user={{isAuthorized(user.isAuth)}}><vote-login>
+            </paper-material>
+        </template>
     </template>
 
     <script>
