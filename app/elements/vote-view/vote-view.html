@@ -29,9 +29,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </template>
 
         <template is="dom-if" if="{{!isAuthorized(user.isAuth)}}">
-            <paper-material>
-                <vote-login on-get-login="passwordCheck" user={{isAuthorized(user.isAuth)}}><vote-login>
-            </paper-material>
+            <vote-login on-get-login="passwordCheck" user={{isAuthorized(user.isAuth)}}><vote-login>
         </template>
     </template>
 
