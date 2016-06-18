@@ -24,11 +24,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       .candidate-card {
-          width: 10%;
+          width: 24%;
           display: inline-block;
           text-align: center;
           padding: 1rem;
           font-size: 4rem;
+          color: white;
       }
 
       .candidate-actions {
@@ -58,12 +59,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       .section-title{
-          width: 100%;
           text-align: center;
           font-size: 1rem;
           text-transform: uppercase;
           display: block;
-          padding: 0.8rem 0;
+          padding: 0.8rem 1rem;
           background-color: #607D8B;
           overflow: hidden;
           color: white;
@@ -88,15 +88,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       .progress-wrapper {
         display: block;
         width: 100%;
-        background-color: #FF5252;
+        background-color: rgb(212, 220, 224);
         height: 0.6rem;
         margin: 0 1rem;
         margin-bottom: -1rem;
         float: left;
-      }
-
-      .progress-wrapper-decri {
-        color: #38B3B8;
       }
 
       .progress {
@@ -115,7 +111,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       .progress-villano {
         background-color: #FF5252;
         transition: 2s;
-        display: none;
       }
 
       .span-title {
@@ -178,13 +173,31 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
        .panel {
            margin: 1rem;
        }
+
+       .actions-group{
+           display: block;
+           width: 90%;
+       }
+
+       @media all and (min-width: 300px) and (max-width: 840px) {
+           .candidate-card {
+               display: block;
+               width: 100%;
+               padding: 0;
+               font-size: 2rem;
+           }
+
+           .vote-input {
+               width: 50%;
+           }
+       }
     </style>
 
     <template is="dom-repeat" items="{{votes}}" id="voteControls">
         <template is="dom-if" if="{{isSection(item.__firebaseKey__)}}">
             <paper-material class="section-container" elevation="1">
                 <div class="section-title"><h3 class="section-number">{{item.__firebaseKey__}}</h3> <h3 class="section-votes"> {{getTotal(item)}} VOTI RIPORTATI </h3></div>
-                <paper-material elevation="-1" class="panel">
+                <paper-material elevation="1" class="panel">
                     <div class="candidate-card candidate-card-decri">D</div>
                     <div class="card-actions candidate-actions">
                         <div class="actions-group">
@@ -206,9 +219,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     </div>
                 </paper-material>
 
-                <div class="divider"></div>
+                <!-- <div class="divider"></div> -->
 
-                <paper-material elevation="-1" class="panel">
+                <paper-material elevation="1" class="panel">
                     <div class="candidate-card candidate-card-villano">V</div>
                     <div class="card-actions candidate-actions">
                         <div class="actions-group">
@@ -218,7 +231,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                     <paper-icon-button class="big add-button" icon="add-circle" on-tap="_voteAdd" section$="{{item.__firebaseKey__}}" candidate="villano" act="add"></paper-icon-button>
                                 </div>
                                 <span class="percentage-text">
-                                    {{getPercentage(item, 'villano', get)}}
+                                    {{getPercentage(item, 'villano', 'get')}}
                                 </span>
                             </div>
                             <div class="progress-wrapper">
