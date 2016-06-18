@@ -1,0 +1,257 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-spinner/paper-spinner.html">
+<link rel="import" href="../../bower_components/firebase-element/firebase-collection.html">
+
+<dom-module id="main-view">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      .spinner{
+          position: absolute;
+          margin: auto;
+          left: 0;
+          right: 0;
+          top: 50%;
+          bottom: 50%;
+      }
+
+      .bar-group {
+          padding: 1rem;
+      }
+
+      .progress-wrapper,
+      .progress {
+          width: 100%;
+          height: 1.5rem;
+          transition: .2s;
+          background-color: rgb(212, 220, 224);
+      }
+
+      .progress-wrapper {
+          margin: 0.5rem 0;
+          position: relative;
+      }
+
+      .progress-decri {
+        position: absolute;
+        background-color: #38B3B8;
+        transition: 2s;
+      }
+
+      .progress-villano {
+        position: absolute;
+        background-color: #FF5252;
+        transition: 2s;
+      }
+
+      .main-title{
+          display: block;
+            width: 90%;
+            margin-left: 1rem;
+            padding: 1rem 0;
+            padding-bottom: 0;
+      }
+    </style>
+
+    <template is="dom-if" if="{{!spinner}}">
+        <paper-material class="totals-group">
+            <h1 class="main-title"> ELEZIONI COMUNALI 2016 - AVERSA</h1>
+            <div class="bar-group">
+                <span class="candidate-name">DE CRISTOFARO : {{decriTotalPercentage}}% - VOTI: {{decriTotalNumber}}</span>
+                <div class="progress-wrapper">
+                    <span class="progress progress-decri" style$="width: {{decriTotalPercentage}}%"></span>
+                </div>
+            </div>
+            <div class="bar-group">
+                <span class="candidate-name">VILLANO : {{villanoTotalPercentage}}%  - VOTI: {{villanoTotalNumber}} </span>
+                <div class="progress-wrapper">
+                    <span class="progress progress-villano" style$="width: {{villanoTotalPercentage}}%"></span>
+                </div>
+            </div>
+
+           <!-- <div> {{villanoTotalNumber}}%</div>
+           <div> De cristofaro Totale {{decriTotalNumber}}</div> -->
+           <div class="bar-group"> TOTALE VOTI RIPORTATI: {{globalNum}}</div>
+       </paper-material>
+   </template>
+
+   <paper-spinner class="spinner" active="{{spinner}}">Loading...<paper-spinner>
+
+</template>
+  <script>
+  (function() {
+    'use strict';
+
+    var test = Polymer({
+      is: 'main-view',
+      properties: {
+          totals: {
+              type: Object,
+              notify: true,
+          },
+          something:{
+              type: String,
+              notify: true
+          },
+
+          spinner:{
+              type: Boolean,
+              notify: true,
+              value: true,
+          },
+
+          villanoTotalNumber: {
+              type: String,
+              notify: true,
+              value: '...'
+          },
+
+          villanoTotalPercentage: {
+              type: String,
+              notify: true,
+              value: '...'
+          },
+
+          decriTotalNumber: {
+              type: String,
+              notify: true,
+              value: '...'
+          },
+
+          decriTotalPercentage: {
+              type: String,
+              notify: true,
+              value: '...'
+          },
+
+          globalNum: {
+              type: String,
+              notify: true,
+              value: '...'
+          },
+      },
+
+      getDown: function(item){
+        var gino = this.getGlobalTotal();
+        return item;
+      },
+
+     getGlobalTotal: function(candidate){
+        var ref = new Firebase('https://polypol.firebaseio.com/');
+        var that = this;
+        // var cssString = get == 'get' ? '' : 'width:';
+
+        ref.on('value', function(snapshot) {
+            var dbData = snapshot.val();
+            var viTotal = dbData['villanototal'];
+            var deTotal = dbData['decritotal'];
+            var gbTotal = dbData['maintotal'];
+
+            that.villanoTotalNumber = viTotal;
+            that.decriTotalNumber = deTotal;
+            that.globalNum = gbTotal;
+
+            that.villanoTotalPercentage = Number((viTotal / gbTotal) * 100).toFixed(2) ;
+            that.decriTotalPercentage = Number((deTotal / gbTotal) * 100).toFixed(2);
+            console.log(that.villanoTotalPercentage, that.decriTotalPercentage);
+            that.spinner = false;
+            //console.log(gbTotal, deTotal, viTotal);
+        });
+      },
+
+        ready: function() {
+            this.getGlobalTotal('villano', 20);
+        },
+
+      domReady: function() {
+          this.async(function() { // Wait until node is stamped
+              var a = this.$$('#decri');
+              //console.log(a);
+          });
+          return 'nico';
+      },
+
+      isGlobal:function(item) {
+          if(item == 'maintotal') {
+              return true;
+          }
+
+          return false;
+      },
+
+      isVillano:function(item) {
+          if(item == 'villanototal') {
+              return true;
+          }
+
+          return false;
+      },
+
+      isDecri:function(item) {
+          if(item == 'decritotal') {
+              return true;
+          }
+
+          return false;
+      },
+
+      getPercentage: function(total, votes, get) {
+
+          var cssString = get == 'get' ? '' : 'width:';
+
+          if(candidate == 'villano') {
+
+              var getPercentageVillano = Number((villano / total) * 100).toFixed(2);
+              var percentageVillano = isNaN(getPercentageVillano) ? 0 : getPercentageVillano ;
+
+              console.log('updateVillano...')
+              return cssString + percentageVillano + "%";
+
+          } else if (candidate == 'decri') {
+
+              var getPercentageDecri = Number((decri / total) * 100).toFixed(2);
+              var percentageDecri = isNaN(getPercentageDecri) ? 0 : getPercentageDecri;
+
+              return cssString + percentageDecri + "%";
+              console.log('updateDecri...')
+          }
+
+          // console.log(percentageDecri, percentageVillano);
+      },
+      //
+    //   getTotal: function(votes) {
+    //      this.getGlobal()
+    //      return votes.value;
+    //   },
+
+    //   isMainTotal: function(totalValue){
+    //       var check = totalValue == 'villanototal' || totalValue == 'decritotal' ? true : false;
+    //       return check;
+    //   },
+      //
+    //   isTotalVotes: function(totalValue){
+      //
+    //       console.log('it works');
+    //       if (totalValue == 'maintotal') {
+    //           return true;
+    //       }
+      //
+    //       return false;
+    //   }
+    });
+  })();
+  </script>
+</dom-module>
