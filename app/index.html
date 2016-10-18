@@ -115,6 +115,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <!-- Main Content -->
         <div class="content">
           <iron-pages attr-for-selected="data-route" selected="{{route}}">
+
             <section data-route="home" tabindex="1">
                 <main-view votes="{{votes}}"></main-view>
             </section>
@@ -125,6 +126,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <vote-view votes="{{votes}}" user={{user}}></votes-view>
                 </paper-material>
             </section>
+
           </iron-pages>
         </div>
       </paper-scroll-header-panel>

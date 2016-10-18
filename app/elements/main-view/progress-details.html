@@ -1,0 +1,76 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="progress-details">
+    <template>
+        <style>
+
+            .bar-group {
+                padding: 1rem;
+            }
+
+            /*.progress-wrapper,*/
+            .progress {
+                position: absolute;
+                width: 100%;
+                height: 1.5rem;
+                transition: .2s;
+                background-color: rgb(212, 220, 224);
+            }
+
+            .progress-red {
+                background-color: #FF5252;
+            }
+
+            .progress-cyan {
+                background-color: #38B3B8;
+            }
+
+            .progress-wrapper {
+                width: 100%;
+                height: 1.5rem;
+                margin: 0.5rem 0;
+                position: relative;
+                background-color: rgb(212, 220, 224);
+            }
+
+            .progress-decri {
+              /*background-color: #38B3B8;*/
+              transition: 2s;
+            }
+
+            .progress-villano {
+              /*background-color: #FF5252;*/
+              transition: 2s;
+            }
+
+        </style>
+
+        <div class="bar-group">
+            <span class="candidate-name">[[name]] : [[total-percentage]]% - VOTI: [[total-votes]]</span>
+            <div class="progress-wrapper">
+                <span class$="progress progress-[[color]]" style$="width: [[total-percentage]]%"></span>
+            </div>
+        </div>
+
+        <!-- <div class="bar-group">
+            <span class="candidate-name">VILLANO : {{villanoTotalPercentage}}%  - VOTI: {{villanoTotalNumber}} </span>
+            <div class="progress-wrapper">
+                <span class$="progress progress-[[color]]" style$="width: {{villanoTotalPercentage}}%"></span>
+            </div>
+        </div> -->
+
+        <!-- <div class="bar-group"> TOTALE VOTI RIPORTATI: {{globalNum}}</div> -->
+    </template>
+
+    <script>
+
+    Polymer({
+
+        is: 'progress-details',
+
+        properties: {
+
+        }
+    });
+
+    </script>

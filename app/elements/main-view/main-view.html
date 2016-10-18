@@ -10,7 +10,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/paper-spinner/paper-spinner.html">
-<!-- <link rel="import" href="../../bower_components/firebase-element/firebase-collection.html"> -->
+<link rel="import" href="./progress-details.html">
 
 <dom-module id="main-view">
   <template>
@@ -32,33 +32,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           padding: 1rem;
       }
 
-      .progress-wrapper,
-      .progress {
-          width: 100%;
-          height: 1.5rem;
-          transition: .2s;
-          background-color: rgb(212, 220, 224);
-      }
-
-      .progress-wrapper {
-          margin: 0.5rem 0;
-          position: relative;
-      }
-
-      .progress-decri {
-        position: absolute;
-        background-color: #38B3B8;
-        transition: 2s;
-      }
-
-      .progress-villano {
-        position: absolute;
-        background-color: #FF5252;
-        transition: 2s;
-      }
-
       .main-title{
-          display: block;
+            display: block;
             width: 90%;
             margin-left: 1rem;
             padding: 1rem 0;
@@ -70,22 +45,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <template is="dom-if" if="{{!spinner}}">
         <paper-material class="totals-group">
             <h1 class="main-title"> ELEZIONI COMUNALI 2016 - AVERSA</h1>
-            <div class="bar-group">
-                <span class="candidate-name">DE CRISTOFARO : {{decriTotalPercentage}}% - VOTI: {{decriTotalNumber}}</span>
-                <div class="progress-wrapper">
-                    <span class="progress progress-decri" style$="width: {{decriTotalPercentage}}%"></span>
-                </div>
-            </div>
-            <div class="bar-group">
-                <span class="candidate-name">VILLANO : {{villanoTotalPercentage}}%  - VOTI: {{villanoTotalNumber}} </span>
-                <div class="progress-wrapper">
-                    <span class="progress progress-villano" style$="width: {{villanoTotalPercentage}}%"></span>
-                </div>
-            </div>
 
-           <!-- <div> {{villanoTotalNumber}}%</div>
-           <div> De cristofaro Totale {{decriTotalNumber}}</div> -->
-           <div class="bar-group"> TOTALE VOTI RIPORTATI: {{globalNum}}</div>
+            <progress-details
+                name="DE CRISTOFORO"
+                color="cyan"
+                total-votes=[[decriTotalNumber]]
+                total-percentage=[[decriTotalPercentage]]>
+            </progress-details>
+
+            <progress-details
+                name="VILLANO"
+                color="red"
+                total-votes=[[villanoTotalNumber]]
+                total-percentage=[[villanoTotalPercentage]]>
+            </progress-details>
+
+
+           <div class="bar-group"> TOTALE VOTI RIPORTATI: [[globalNum]]</div>
        </paper-material>
    </template>
 
@@ -143,11 +119,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             },
         },
 
-        // getDown: function(item){
-        //     var gino = this.getGlobalTotal();
-        //     return item;
-        // },
-
         getGlobalTotal: function(candidate){
             var ref = new Firebase('https://polypol.firebaseio.com/');
             var that = this;
@@ -173,25 +144,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         },
 
         ready: function() {
-            this.getGlobalTotal('villano', 20);
+            this.getGlobalTotal();
         },
 
         domReady: function() {
-            this.async(function() { // Wait until node is stamped
-                var a = this.$$('#decri');
-                //console.log(a);
-            });
-
-            return 'nico';
+            // this.async(function() { // Wait until node is stamped
+            //     var a = this.$$('#decri');
+            //     //console.log(a);
+            // });
+            //
+            // return 'nico';
         },
 
-        isGlobal:function(item) {
-            if(item == 'maintotal') {
-                return true;
-            }
-
-            return false;
-        },
+        // isGlobal:function(item) {
+        //     if(item == 'maintotal') {
+        //         return true;
+        //     }
+        //
+        //     return false;
+        // },
 
         isVillano:function(item) {
             if(item == 'villanototal') {
