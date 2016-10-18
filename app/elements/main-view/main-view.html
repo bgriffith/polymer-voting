@@ -10,7 +10,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/paper-spinner/paper-spinner.html">
-<link rel="import" href="../../bower_components/firebase-element/firebase-collection.html">
+<!-- <link rel="import" href="../../bower_components/firebase-element/firebase-collection.html"> -->
 
 <dom-module id="main-view">
   <template>
@@ -92,167 +92,147 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
    <paper-spinner class="spinner" active="{{spinner}}">Loading...<paper-spinner>
 
 </template>
-  <script>
-  (function() {
+<script>
+(function() {
     'use strict';
 
     var test = Polymer({
-      is: 'main-view',
-      properties: {
-          totals: {
-              type: Object,
-              notify: true,
-          },
-          something:{
-              type: String,
-              notify: true
-          },
+        is: 'main-view',
 
-          spinner:{
-              type: Boolean,
-              notify: true,
-              value: true,
-          },
+        properties: {
 
-          villanoTotalNumber: {
-              type: String,
-              notify: true,
-              value: '...'
-          },
+            totals: {
+                type: Object,
+                notify: true,
+            },
 
-          villanoTotalPercentage: {
-              type: String,
-              notify: true,
-              value: '...'
-          },
+            spinner:{
+                type: Boolean,
+                notify: true,
+                value: true,
+            },
 
-          decriTotalNumber: {
-              type: String,
-              notify: true,
-              value: '...'
-          },
+            villanoTotalNumber: {
+                type: String,
+                notify: true,
+                value: '...'
+            },
 
-          decriTotalPercentage: {
-              type: String,
-              notify: true,
-              value: '...'
-          },
+            villanoTotalPercentage: {
+                type: String,
+                notify: true,
+                value: '...'
+            },
 
-          globalNum: {
-              type: String,
-              notify: true,
-              value: '...'
-          },
-      },
+            decriTotalNumber: {
+                type: String,
+                notify: true,
+                value: '...'
+            },
 
-      getDown: function(item){
-        var gino = this.getGlobalTotal();
-        return item;
-      },
+            decriTotalPercentage: {
+                type: String,
+                notify: true,
+                value: '...'
+            },
 
-     getGlobalTotal: function(candidate){
-        var ref = new Firebase('https://polypol.firebaseio.com/');
-        var that = this;
-        // var cssString = get == 'get' ? '' : 'width:';
+            globalNum: {
+                type: String,
+                    notify: true,
+                    value: '...'
+            },
+        },
 
-        ref.on('value', function(snapshot) {
-            var dbData = snapshot.val();
-            var viTotal = dbData['villanototal'];
-            var deTotal = dbData['decritotal'];
-            var gbTotal = dbData['maintotal'];
+        // getDown: function(item){
+        //     var gino = this.getGlobalTotal();
+        //     return item;
+        // },
 
-            that.villanoTotalNumber = viTotal;
-            that.decriTotalNumber = deTotal;
-            that.globalNum = gbTotal;
+        getGlobalTotal: function(candidate){
+            var ref = new Firebase('https://polypol.firebaseio.com/');
+            var that = this;
 
-            that.villanoTotalPercentage = Number((viTotal / gbTotal) * 100).toFixed(2) ;
-            that.decriTotalPercentage = Number((deTotal / gbTotal) * 100).toFixed(2);
-            console.log(that.villanoTotalPercentage, that.decriTotalPercentage);
-            that.spinner = false;
-            //console.log(gbTotal, deTotal, viTotal);
-        });
-      },
+            ref.on('value', function(snapshot) {
+                var dbData = snapshot.val();
+                var viTotal = dbData['villanototal'];
+                var deTotal = dbData['decritotal'];
+                var gbTotal = dbData['maintotal'];
+
+                that.villanoTotalNumber = viTotal;
+                that.decriTotalNumber = deTotal;
+                that.globalNum = gbTotal;
+
+                that.villanoTotalPercentage = Number((viTotal / gbTotal) * 100).toFixed(2) ;
+                that.decriTotalPercentage = Number((deTotal / gbTotal) * 100).toFixed(2);
+
+                console.log(that.villanoTotalPercentage, that.decriTotalPercentage);
+
+                that.spinner = false;
+                //console.log(gbTotal, deTotal, viTotal);
+            });
+        },
 
         ready: function() {
             this.getGlobalTotal('villano', 20);
         },
 
-      domReady: function() {
-          this.async(function() { // Wait until node is stamped
-              var a = this.$$('#decri');
-              //console.log(a);
-          });
-          return 'nico';
-      },
+        domReady: function() {
+            this.async(function() { // Wait until node is stamped
+                var a = this.$$('#decri');
+                //console.log(a);
+            });
 
-      isGlobal:function(item) {
-          if(item == 'maintotal') {
-              return true;
-          }
+            return 'nico';
+        },
 
-          return false;
-      },
+        isGlobal:function(item) {
+            if(item == 'maintotal') {
+                return true;
+            }
 
-      isVillano:function(item) {
-          if(item == 'villanototal') {
-              return true;
-          }
+            return false;
+        },
 
-          return false;
-      },
+        isVillano:function(item) {
+            if(item == 'villanototal') {
+                return true;
+            }
 
-      isDecri:function(item) {
-          if(item == 'decritotal') {
-              return true;
-          }
+            return false;
+        },
 
-          return false;
-      },
+        isDecri:function(item) {
+            if(item == 'decritotal') {
+                return true;
+            }
 
-      getPercentage: function(total, votes, get) {
+            return false;
+        },
 
-          var cssString = get == 'get' ? '' : 'width:';
+        getPercentage: function(total, votes, get) {
 
-          if(candidate == 'villano') {
+            var cssString = get == 'get' ? '' : 'width:';
 
-              var getPercentageVillano = Number((villano / total) * 100).toFixed(2);
-              var percentageVillano = isNaN(getPercentageVillano) ? 0 : getPercentageVillano ;
+            if(candidate == 'villano') {
 
-              console.log('updateVillano...')
-              return cssString + percentageVillano + "%";
+                var getPercentageVillano = Number((villano / total) * 100).toFixed(2);
+                var percentageVillano = isNaN(getPercentageVillano) ? 0 : getPercentageVillano ;
 
-          } else if (candidate == 'decri') {
+                console.log('updateVillano...')
+                return cssString + percentageVillano + "%";
 
-              var getPercentageDecri = Number((decri / total) * 100).toFixed(2);
-              var percentageDecri = isNaN(getPercentageDecri) ? 0 : getPercentageDecri;
+            } else if (candidate == 'decri') {
 
-              return cssString + percentageDecri + "%";
-              console.log('updateDecri...')
-          }
+                var getPercentageDecri = Number((decri / total) * 100).toFixed(2);
+                var percentageDecri = isNaN(getPercentageDecri) ? 0 : getPercentageDecri;
 
-          // console.log(percentageDecri, percentageVillano);
-      },
-      //
-    //   getTotal: function(votes) {
-    //      this.getGlobal()
-    //      return votes.value;
-    //   },
+                return cssString + percentageDecri + "%";
+                console.log('updateDecri...')
+            }
 
-    //   isMainTotal: function(totalValue){
-    //       var check = totalValue == 'villanototal' || totalValue == 'decritotal' ? true : false;
-    //       return check;
-    //   },
-      //
-    //   isTotalVotes: function(totalValue){
-      //
-    //       console.log('it works');
-    //       if (totalValue == 'maintotal') {
-    //           return true;
-    //       }
-      //
-    //       return false;
-    //   }
+        // console.log(percentageDecri, percentageVillano);
+        }
     });
-  })();
-  </script>
+})();
+</script>
 </dom-module>

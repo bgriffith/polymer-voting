@@ -11,8 +11,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
-<link rel="import" href="../../bower_components/neon-animation/animations/scale-up-animation.html">
-<link rel="import" href="../../bower_components/neon-animation/animations/fade-out-animation.html">
+<link rel="import" href="../../bower_components/paper-material/paper-material.html">
 <link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
 
 <dom-module id="vote-login">
@@ -86,34 +85,36 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     'use strict';
 
     Polymer({
-      is: 'vote-login',
+        is: 'vote-login',
 
-      properties: {
-        foo: {
-          type: String,
-          value: 'vote-login',
-          notify: true
-        }
-      },
+        properties: {
 
-    _getPassword: function(e){
+            foo: {
+              type: String,
+              value: 'vote-login',
+              notify: true
+            }
+        },
 
-        var dialog = this.$.animated;
-        var password = this.$.passValue.value;
+        _getPassword: function(e){
 
-        if(password == 'enricosindaco') {
+            var dialog = this.$.animated;
+            var password = this.$.passValue.value;
+
+            if(password == 'enricosindaco') {
+                dialog.close();
+                this.fire('get-login', { password: this.$.passValue.value });
+            }
+        },
+
+        cancelAction: function() {
+            var dialog = this.$.animated;
             dialog.close();
-            this.fire('get-login', { password: this.$.passValue.value });
-        }
-      },
+        },
 
-      cancelAction: function() {
-          var dialog = this.$.animated;
-          dialog.close();
-      },
+        clickHandler: function(e) {
+            var button = e.target;
 
-      clickHandler: function(e) {
-          var button = e.target;
             while (!button.hasAttribute('data-dialog') && button !== document.body) {
                 button = button.parentElement;
             }
@@ -121,14 +122,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             if (!button.hasAttribute('data-dialog')) {
                 return;
             }
+
             var id = button.getAttribute('data-dialog');
             var dialog = document.getElementById(id);
 
             if (dialog) {
                 dialog.open();
             }
-    }
-
+        }
     });
   })();
   </script>

@@ -10,7 +10,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../../bower_components/paper-material/paper-material.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
@@ -196,9 +195,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <template is="dom-repeat" items="{{votes}}" id="voteControls">
         <template is="dom-if" if="{{isSection(item.__firebaseKey__)}}">
             <paper-material class="section-container" elevation="1">
-                <div class="section-title"><h3 class="section-number">{{item.__firebaseKey__}}</h3> <h3 class="section-votes"> {{getTotal(item)}} VOTI RIPORTATI </h3></div>
+                <div class="section-title">
+                    <h3 class="section-number">{{item.__firebaseKey__}}</h3>
+                    <h3 class="section-votes"> {{getTotal(item)}} VOTI RIPORTATI </h3>
+                </div>
+
                 <paper-material elevation="1" class="panel">
                     <div class="candidate-card candidate-card-decri">D</div>
+
                     <div class="card-actions candidate-actions">
                         <div class="actions-group">
                             <div class="actions-top">
@@ -206,15 +210,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                     <paper-icon-button class="big remove-button" icon="remove-circle" on-tap="_voteRemove" section$="{{item.__firebaseKey__}}" candidate="decri" act="remove" total$="{{getTotalCandidate(item, 'decri')}}"></paper-icon-button>
                                     <paper-icon-button class="big add-button" icon="add-circle" on-tap="_voteAdd" section$="{{item.__firebaseKey__}}" candidate="decri" act="add"></paper-icon-button>
                                 </div>
+
                                 <span class="percentage-text">
                                     {{getPercentage(item, 'decri', 'get')}}
                                 </span>
                             </div>
+
                             <div class="progress-wrapper">
                                 <span class="progress progress-decri" style$="{{getPercentage(item, 'decri')}}"></span>
                             </div>
                         </div>
+
                         <div class="card-content"><span class="span-title"> VOTI </span>
+
                         <paper-input id="voteValue" class="vote-input" maxlength="6" section$="{{item.__firebaseKey__}}" candidate="decri" on-keydown="voteInput" oldvalue$="{{getTotalCandidate(item, 'decri')}}" placeholder="{{getTotalCandidate(item, 'decri')}}" noLabelFloat></paper-input></div>
                     </div>
                 </paper-material>
@@ -223,6 +231,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                 <paper-material elevation="1" class="panel">
                     <div class="candidate-card candidate-card-villano">V</div>
+
                     <div class="card-actions candidate-actions">
                         <div class="actions-group">
                             <div class="actions-top">
@@ -234,29 +243,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                     {{getPercentage(item, 'villano', 'get')}}
                                 </span>
                             </div>
+
                             <div class="progress-wrapper">
                                 <span class="progress progress-villano" style$="{{getPercentage(item, 'villano')}}"></span>
                             </div>
                         </div>
+
                         <div class="card-content">
                             <span class="span-title"> VOTI </span>
                             <paper-input id="voteValue" class="vote-input" maxlength="6" section$="{{item.__firebaseKey__}}" candidate="villano" on-keydown="voteInput" oldvalue$="{{getTotalCandidate(item, 'villano')}}" placeholder="{{getTotalCandidate(item, 'villano')}}" noLabelFloat></paper-input></div>
-                    </div>
+                        </div>
                 </paper-material>
-
-                <!-- <div class="progressBar">
-
-                    <span class="progress progress-villano" style$="{{getPercentage(item, 'villano')}}">{{getPercentage(item, 'villano', 'get')}}</span>
-                </div> -->
-
-                <!-- <paper-card class="candidate-card candidate-card-villano" heading='Villano'>
-                  <div class="card-content">Voti {{getTotalCandidate(item, 'villano')}}</div>
-                  <div class="card-actions">
-                      <paper-icon-button icon="add-circle" on-tap="_voteAdd" section$="{{item.__firebaseKey__}}" candidate="villano" act="add"></paper-icon-button>
-                      <paper-icon-button icon="remove-circle" on-tap="_voteRemove" section$="{{item.__firebaseKey__}}" candidate="villano" act="remove" total$="{{getTotalCandidate(item, 'villano')}}"></paper-icon-button>
-                      <paper-input id="voteValue" maxlength="6" section$="{{item.__firebaseKey__}}" candidate="villano" on-keydown="voteInput" oldvalue$="{{getTotalCandidate(item, 'villano')}}"></paper-input>
-                  </div>
-                </paper-card> -->
             </paper-material>
         </template>
     </template>
