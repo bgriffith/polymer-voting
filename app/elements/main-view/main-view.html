@@ -77,10 +77,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         properties: {
 
-            totals: {
-                type: Object,
-                notify: true,
-            },
+            // totals: {
+            //     type: Object,
+            //     notify: true,
+            // },
 
             spinner:{
                 type: Boolean,
@@ -145,39 +145,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         ready: function() {
             this.getGlobalTotal();
-        },
-
-        domReady: function() {
-            // this.async(function() { // Wait until node is stamped
-            //     var a = this.$$('#decri');
-            //     //console.log(a);
-            // });
-            //
-            // return 'nico';
-        },
-
-        // isGlobal:function(item) {
-        //     if(item == 'maintotal') {
-        //         return true;
-        //     }
-        //
-        //     return false;
-        // },
-
-        isVillano:function(item) {
-            if(item == 'villanototal') {
-                return true;
-            }
-
-            return false;
-        },
-
-        isDecri:function(item) {
-            if(item == 'decritotal') {
-                return true;
-            }
-
-            return false;
         },
 
         getPercentage: function(total, votes, get) {

@@ -262,23 +262,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   </template>
   <script>
-  (function() {
-    'use strict';
-
     Polymer({
         is: 'vote-controls',
 
         properties: {
             one: Array
-        },
-
-
-        filtz: function(item){
-            if(item == false) {
-               return false;
-            }
-
-            return true;
         },
 
         toggle: function(e) {
@@ -336,7 +324,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         voteInput: function(e) {
             if (e.keyCode === 13 || e.keyCode === 9) {
                 var target = e.target.domHost;
-                // var opponentVotes = target.getAttribute('candidate') == 'villano' ? 'decri' : 'villano';
+
                 var section = target.getAttribute('section');
                 var oldvalue = target.getAttribute('oldvalue');
                 var newValue = Number(target.value);
@@ -385,6 +373,5 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             }
         }
     });
-  })();
   </script>
 </dom-module>
