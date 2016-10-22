@@ -16,3 +16,7 @@ body {
 .page-title {
   outline: none;
 }
+
+paper-button{
+  background-color:var(--paper-button-background-color);
+}

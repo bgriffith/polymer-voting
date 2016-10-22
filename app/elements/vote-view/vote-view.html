@@ -9,11 +9,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../bower_components/firebase-element/firebase-collection.html">
-<link rel="import" href="../../bower_components/paper-card/paper-card.html">
-<link rel="import" href="../../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../vote-controls/vote-controls.html">
-<link rel="import" href="../vote-login/vote-login.html">
+<link rel="import" href="./vote-controls.html">
+<link rel="import" href="./vote-login.html">
 
 
 <dom-module id="vote-view">
@@ -29,9 +26,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </template>
 
         <template is="dom-if" if="{{!isAuthorized(user.isAuth)}}">
-            <paper-material>
-                <vote-login on-get-login="passwordCheck" user={{isAuthorized(user.isAuth)}}><vote-login>
-            </paper-material>
+            <vote-login on-get-login="passwordCheck" user={{isAuthorized(user.isAuth)}}><vote-login>
         </template>
     </template>
 
