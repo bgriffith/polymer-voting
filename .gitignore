@@ -1,10 +1,7 @@
 node_modules
 dist
+test/temp
 bower_components
 .tmp
-.publish/
-.firebaserc
-database.rules.json
-firebase.json
-index.html
-404.html
+test/bower_components/
+.DS_Store
