@@ -117,13 +117,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <iron-pages attr-for-selected="data-route" selected="{{route}}">
 
             <section data-route="home" tabindex="1">
-                <main-view votes="[[votes]]"></main-view>
+                <main-view totals="{{totals}}"></main-view>
+                <!-- <firebase-app
+                    name="polypol"
+                    database-url="https://polypol.firebaseio.com/"
+                    api-key="AIzaSyB5SXBL1SmGZuGSk6FfL-NrysDr05K38N8"></firebase-app> -->
+                <vote-data totals={{totals}}></vote-data>
             </section>
 
             <section data-route="admin" tabindex="-1">
                 <paper-material elevation="1">
-                    <vote-data votes="{{votes}}" user={{user}} location="https://polypol.firebaseio.com/"></vote-data>
-                    <vote-view votes="{{votes}}" user={{user}}></votes-view>
+                    <!-- <vote-view totals="{{totals}}" user={{user}}></votes-view> -->
                 </paper-material>
             </section>
 

@@ -8,18 +8,30 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 
-<link rel="import" href="../../bower_components/firebase-element/firebase-collection.html">
+<!-- <link rel="import" href="../../bower_components/firebase-element/firebase-collection.html"> -->
 <link rel="import" href="../../bower_components/iron-localstorage/iron-localstorage.html">
+<link rel="import" href="../../bower_components/polymerfire/polymerfire.html">
+<link rel="import" href="../../bower_components/polymerfire/firebase.html">
+<link rel="import" href="../../bower_components/polymerfire/firebase-app.html">
+<!-- <link rel="import" href="../../bower_components/polymerfire/firebase-document.html">
+<link rel="import" href="../../bower_components/polymerfire/firebase-query.html"> -->
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<!-- <link rel="import" href="../../bower_components/polymerfire/firebase-document.html"> -->
+
 
 <dom-module id="vote-data">
 
 <template>
-    <firebase-collection id='polypol' data="{{votes}}" location="{{location}}"></firebase-collection>
-    <iron-localstorage
-        name="my-app-storage"
-        value="{{user}}"
-        on-iron-localstorage-load-empty="initializeUser">
-    </iron-localstorage>
+        <firebase-app
+            auth-domain="polypol.firebaseapp.com"
+            name="polypol"
+            database-url="https://polypol.firebaseio.com/"
+            api-key="AIzaSyB5SXBL1SmGZuGSk6FfL-NrysDr05K38N8">
+        </firebase-app>
+
+        <firebase-document id="docu" app-name="polypol" path="/total" data="{{totals}}"></firebase-document>
+        <!-- <p>{{whileloading(dataResult)}}</p> -->
+        <!-- <paper-button raised on-tap="_databaseResult" data-args="{{data}}">Raised button {{data}}</paper-button> -->
 </template>
 
 <script>
@@ -30,20 +42,50 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
             properties: {
 
-                votes: {
+                totals: {
+                    total: Object,
                     notify: true
                 },
+
                 user: {
                     notify: true
                 }
             },
 
-            initializeUser: function() {
-                this.user = {
-                    isAuth: false
+            // initializeUser: function() {
+            //     this.user = {
+            //         isAuth: false
+            //     }
+            // },
+
+            // data: {
+            //     type: Object,
+            //     observer: 'dataChanged'
+            // },
+
+            // observers: [
+            //     'dataChanged(data.*)'
+            // ],
+            //
+            // dataChanged: function (newData, oldData) {
+            //     console.log(newData);
+            //     // convert the "newData" object to the "convertedData" object
+            // },
+
+            _databaseResult: function(e) {
+                console.log("fire ===>");
+                var datas = e.target.dataArgs;
+                console.log(datas);
+            },
+
+            whileloading: function(data){
+                var valz = typeof data !== 'number' ? '...' : data ;
+                return valz;
             }
-        }
         });
+
+
+
     })();
 </script>
 </dom-module>

@@ -49,19 +49,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <progress-details
                 name="DE CRISTOFORO"
                 color="cyan"
-                total-votes=[[decriTotalNumber]]
-                total-percentage=[[decriTotalPercentage]]>
+                total-votes=[[totals.decritotal]]
+                total-percentage=[[_getPercentage(totals.decritotal,totals.maintotal)]]>
             </progress-details>
 
             <progress-details
                 name="VILLANO"
                 color="red"
-                total-votes=[[villanoTotalNumber]]
-                total-percentage=[[villanoTotalPercentage]]>
+                total-votes=[[totals.villanototal]]
+                total-percentage=[[_getPercentage(totals.villanototal,totals.maintotal)]]>
             </progress-details>
 
 
-           <div class="bar-group"> TOTALE VOTI RIPORTATI: [[globalNum]]</div>
+           <div class="bar-group"> TOTALE VOTI RIPORTATI: [[totals.maintotal]]</div>
        </paper-material>
    </template>
 
@@ -85,7 +85,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             spinner:{
                 type: Boolean,
                 notify: true,
-                value: true,
+                value: false, //change true
             },
 
             villanoTotalNumber: {
@@ -119,57 +119,62 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             },
         },
 
-        getGlobalTotal: function(candidate){
-            var ref = new Firebase('https://polypol.firebaseio.com/');
-            var that = this;
+        _getPercentage: function(total, partial) {
+            var votePercentage = Number((total / partial) * 100).toFixed(2);
+            return votePercentage;
+        }
 
-            ref.on('value', function(snapshot) {
-                var dbData = snapshot.val();
-                var viTotal = dbData['villanototal'];
-                var deTotal = dbData['decritotal'];
-                var gbTotal = dbData['maintotal'];
-
-                that.villanoTotalNumber = viTotal;
-                that.decriTotalNumber = deTotal;
-                that.globalNum = gbTotal;
-
-                that.villanoTotalPercentage = Number((viTotal / gbTotal) * 100).toFixed(2) ;
-                that.decriTotalPercentage = Number((deTotal / gbTotal) * 100).toFixed(2);
-
-                console.log(that.villanoTotalPercentage, that.decriTotalPercentage);
-
-                that.spinner = false;
-                //console.log(gbTotal, deTotal, viTotal);
-            });
-        },
-
-        ready: function() {
-            this.getGlobalTotal();
-        },
-
-        getPercentage: function(total, votes, get) {
-
-            var cssString = get == 'get' ? '' : 'width:';
-
-            if(candidate == 'villano') {
-
-                var getPercentageVillano = Number((villano / total) * 100).toFixed(2);
-                var percentageVillano = isNaN(getPercentageVillano) ? 0 : getPercentageVillano ;
-
-                console.log('updateVillano...')
-                return cssString + percentageVillano + "%";
-
-            } else if (candidate == 'decri') {
-
-                var getPercentageDecri = Number((decri / total) * 100).toFixed(2);
-                var percentageDecri = isNaN(getPercentageDecri) ? 0 : getPercentageDecri;
-
-                return cssString + percentageDecri + "%";
-                console.log('updateDecri...')
-            }
+        // getGlobalTotal: function(candidate){
+        //     var ref = new Firebase('https://polypol.firebaseio.com/');
+        //     var that = this;
+        //
+        //     ref.on('value', function(snapshot) {
+        //         var dbData = snapshot.val();
+        //         var viTotal = dbData['villanototal'];
+        //         var deTotal = dbData['decritotal'];
+        //         var gbTotal = dbData['maintotal'];
+        //
+        //         that.villanoTotalNumber = viTotal;
+        //         that.decriTotalNumber = deTotal;
+        //         that.globalNum = gbTotal;
+        //
+        //         that.villanoTotalPercentage = Number((viTotal / gbTotal) * 100).toFixed(2) ;
+        //         that.decriTotalPercentage = Number((deTotal / gbTotal) * 100).toFixed(2);
+        //
+        //         console.log(that.villanoTotalPercentage, that.decriTotalPercentage);
+        //
+        //         that.spinner = false;
+        //         //console.log(gbTotal, deTotal, viTotal);
+        //     });
+        // },
+        //
+        // ready: function() {
+        //     this.getGlobalTotal();
+        // },
+        //
+        // getPercentage: function(total, votes, get) {
+        //
+        //     var cssString = get == 'get' ? '' : 'width:';
+        //
+        //     if(candidate == 'villano') {
+        //
+        //         var getPercentageVillano = Number((villano / total) * 100).toFixed(2);
+        //         var percentageVillano = isNaN(getPercentageVillano) ? 0 : getPercentageVillano ;
+        //
+        //         console.log('updateVillano...')
+        //         return cssString + percentageVillano + "%";
+        //
+        //     } else if (candidate == 'decri') {
+        //
+        //         var getPercentageDecri = Number((decri / total) * 100).toFixed(2);
+        //         var percentageDecri = isNaN(getPercentageDecri) ? 0 : getPercentageDecri;
+        //
+        //         return cssString + percentageDecri + "%";
+        //         console.log('updateDecri...')
+        //     }
 
         // console.log(percentageDecri, percentageVillano);
-        }
+        // }
     });
 })();
 </script>

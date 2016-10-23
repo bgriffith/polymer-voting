@@ -28,6 +28,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <template is="dom-if" if="{{!isAuthorized(user.isAuth)}}">
             <vote-login on-get-login="passwordCheck" user={{isAuthorized(user.isAuth)}}><vote-login>
         </template>
+
+        <template is="dom-repeat" items="{{totals}}">
+
+        </template>
     </template>
 
     <script>
@@ -37,111 +41,111 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 is: 'vote-view',
 
                 properties: {
-                    dbString: 'https://polypol.firebaseio.com/',
+                    // dbString: 'https://polypol.firebaseio.com/',
                     votes: {
                         type: Array
                     }
-                },
-
-                passwordCheck: function(e){
-                    var password = e.detail.password;
-
-                    if(password === 'enricosindaco'){
-                        if(this.user.isAuth === false){
-                            this.set('user.isAuth', true);
-                        }
-                    }
-                    console.log(e.detail.password);
-                },
-
-                isAuthorized: function(){
-                    return this.user.isAuth;
-                },
-
-                changeAdmin: function() {
-                    if(this.user.isAuth === true){
-                        this.set('user.isAuth', false);
-                    }else {
-                        this.set('user.isAuth', true);
-                    }
-                },
-
-                updateCandidatePartial: function(e) {
-                    var dbTarget = new Firebase(this.properties.dbString + e.detail.section + '/' + e.detail.candidate);
-
-                    dbTarget.transaction(function(currentCandidate) {
-                        if (e.detail.action == 'add') {
-                            return currentCandidate + 1;
-                        }else if (e.detail.action == 'remove') {
-                            return currentCandidate - 1;
-                        }
-                    });
-
-                    this.updateSectionTotal(e.detail.section, e.detail.action);
-                    this.updateCandidateMainTotal(e.detail.action, e.detail.candidate);
-                    this.updateMainTotal(e.detail.action);
-                },
-
-                updateSectionTotal: function (section, action, amount) {
-                    var dbTarget = new Firebase(this.properties.dbString + section + '/total');
-                    var val = amount > 0 && !NaN ? amount : 1;
-                    console.log(val);
-
-                    dbTarget.transaction(function(currentTotal) {
-                        if (action == 'add') {
-                            return currentTotal + val;
-                        }else if (action == 'remove') {
-                            return currentTotal - val;
-                        }
-                    });
-                },
-
-                updateMainTotal: function (action, amount) {
-                    var dbTarget = new Firebase( this.properties.dbString + 'maintotal');
-                    var val = amount > 0 && !NaN ? amount : 1;
-
-                    dbTarget.transaction(function(currentMaintotal) {
-                        if (action == 'add') {
-                            return currentMaintotal + val;
-                        }else if (action == 'remove') {
-                            return currentMaintotal - val;
-                        }
-                    });
-                },
-
-                updateCandidateMainTotal: function (action, candidate, amount) {
-                    var dbTarget = new Firebase(this.properties.dbString + candidate + 'total');
-                    var valueTarget = 'current' + candidate.charAt(0).toUpperCase() + candidate.slice(1) + 'total';
-                    var val = amount > 0 && !NaN ? amount : 1;
-
-                    dbTarget.transaction(function(valueTarget) {
-                        if (action == 'add') {
-                            return valueTarget + val;
-                        }else if (action == 'remove') {
-                            return valueTarget - val;
-                        }
-                    });
-                },
-
-                updateCandidateInput: function (e) {
-                    var dbTarget = new Firebase(this.properties.dbString + e.detail.section);
-                    var valueObject = {};
-                    var newValue = Number(e.detail.value);
-                    var amount = Number(e.detail.amount);
-                    console.log(e.detail);
-
-                    if (newValue > 0 && !NaN || amount > 0 && !NaN) {
-                        valueObject[e.detail.candidate] = Number(e.detail.value);
-                        dbTarget.update(valueObject);
-                    } else {
-                        console.log('no vote added');
-                    }
-
-                    this.updateSectionTotal(e.detail.section, e.detail.action, e.detail.amount);
-                    this.updateCandidateMainTotal(e.detail.action, e.detail.candidate, e.detail.amount);
-                    this.updateMainTotal(e.detail.action, e.detail.amount);
-
                 }
+
+                // passwordCheck: function(e){
+                //     var password = e.detail.password;
+                //
+                //     if(password === 'enricosindaco'){
+                //         if(this.user.isAuth === false){
+                //             this.set('user.isAuth', true);
+                //         }
+                //     }
+                //     console.log(e.detail.password);
+                // },
+                //
+                // isAuthorized: function(){
+                //     return this.user.isAuth;
+                // },
+                //
+                // changeAdmin: function() {
+                //     if(this.user.isAuth === true){
+                //         this.set('user.isAuth', false);
+                //     }else {
+                //         this.set('user.isAuth', true);
+                //     }
+                // },
+                //
+                // updateCandidatePartial: function(e) {
+                //     var dbTarget = new Firebase(this.properties.dbString + e.detail.section + '/' + e.detail.candidate);
+                //
+                //     dbTarget.transaction(function(currentCandidate) {
+                //         if (e.detail.action == 'add') {
+                //             return currentCandidate + 1;
+                //         }else if (e.detail.action == 'remove') {
+                //             return currentCandidate - 1;
+                //         }
+                //     });
+                //
+                //     this.updateSectionTotal(e.detail.section, e.detail.action);
+                //     this.updateCandidateMainTotal(e.detail.action, e.detail.candidate);
+                //     this.updateMainTotal(e.detail.action);
+                // },
+                //
+                // updateSectionTotal: function (section, action, amount) {
+                //     var dbTarget = new Firebase(this.properties.dbString + section + '/total');
+                //     var val = amount > 0 && !NaN ? amount : 1;
+                //     console.log(val);
+                //
+                //     dbTarget.transaction(function(currentTotal) {
+                //         if (action == 'add') {
+                //             return currentTotal + val;
+                //         }else if (action == 'remove') {
+                //             return currentTotal - val;
+                //         }
+                //     });
+                // },
+                //
+                // updateMainTotal: function (action, amount) {
+                //     var dbTarget = new Firebase( this.properties.dbString + 'maintotal');
+                //     var val = amount > 0 && !NaN ? amount : 1;
+                //
+                //     dbTarget.transaction(function(currentMaintotal) {
+                //         if (action == 'add') {
+                //             return currentMaintotal + val;
+                //         }else if (action == 'remove') {
+                //             return currentMaintotal - val;
+                //         }
+                //     });
+                // },
+                //
+                // updateCandidateMainTotal: function (action, candidate, amount) {
+                //     var dbTarget = new Firebase(this.properties.dbString + candidate + 'total');
+                //     var valueTarget = 'current' + candidate.charAt(0).toUpperCase() + candidate.slice(1) + 'total';
+                //     var val = amount > 0 && !NaN ? amount : 1;
+                //
+                //     dbTarget.transaction(function(valueTarget) {
+                //         if (action == 'add') {
+                //             return valueTarget + val;
+                //         }else if (action == 'remove') {
+                //             return valueTarget - val;
+                //         }
+                //     });
+                // },
+                //
+                // updateCandidateInput: function (e) {
+                //     var dbTarget = new Firebase(this.properties.dbString + e.detail.section);
+                //     var valueObject = {};
+                //     var newValue = Number(e.detail.value);
+                //     var amount = Number(e.detail.amount);
+                //     console.log(e.detail);
+                //
+                //     if (newValue > 0 && !NaN || amount > 0 && !NaN) {
+                //         valueObject[e.detail.candidate] = Number(e.detail.value);
+                //         dbTarget.update(valueObject);
+                //     } else {
+                //         console.log('no vote added');
+                //     }
+                //
+                //     this.updateSectionTotal(e.detail.section, e.detail.action, e.detail.amount);
+                //     this.updateCandidateMainTotal(e.detail.action, e.detail.candidate, e.detail.amount);
+                //     this.updateMainTotal(e.detail.action, e.detail.amount);
+                //
+                // }
 
             });
         })();
