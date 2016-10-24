@@ -1,3 +1,3 @@
 ## Polypol
 
-### Voting trscking system build with polymer and firebase
+### Voting trscking system built with polymer and firebase
