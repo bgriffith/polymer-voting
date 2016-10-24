@@ -1,3 +1,3 @@
 ## Polypol
 
-### Voting tracking system built with polymer and firebase
+### Vote tracking system built with polymer and firebase
